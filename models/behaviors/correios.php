@@ -68,18 +68,25 @@ class CorreiosBehavior extends ModelBehavior {
 		$HttpSocket = new HttpSocket();
 		$uri = array(
 			'scheme' => 'http',
-			'host' => 'www.correios.com.br',
+			'host' => 'shopping.correios.com.br',
 			'port' => 80,
-			'path' => '/encomendas/precos/calculo.cfm',
+			'path' => '/wbm/shopping/script/CalcPrecoPrazo.aspx',
 			'query' => array(
-				'resposta' => 'xml',
-				'servico' => $servico,
-				'cepOrigem' => $cepOrigem,
-				'cepDestino' => $cepDestino,
-				'peso' => $peso,
-				'MaoPropria' => $maoPropria,
-				'valorDeclarado' => $valorDeclarado,
-				'avisoRecebimento' => $avisoRecebimento
+				'nCdEmpresa' => '',
+				'sDsSenha' => '',
+				'nCdServico' => $servico,
+				'sCepOrigem' => $cepOrigem,
+				'sCepDestino' => $cepDestino,
+				'nVlPeso' => $peso,
+				'nCdFormato' => 1,
+				'nVlComprimento' => 0,
+				'nVlAltura' => 0,
+				'nVlLargura' => 0,
+				'nVlDiametro' => 0,
+				'sCdMaoPropria' => $maoPropria,
+				'nVlValorDeclarado' => $valorDeclarado,
+				'sCdAvisoRecebimento' => $avisoRecebimento,
+				'StrRetorno' => 'XML'
 			)
 		);
 		$retornoCorreios = trim($HttpSocket->get($uri));
@@ -88,19 +95,18 @@ class CorreiosBehavior extends ModelBehavior {
 		}
 		$Xml = new Xml($retornoCorreios);
 		$infoCorreios = $Xml->toArray();
-		if (!isset($infoCorreios['CalculoPrecos']['DadosPostais'])) {
+		if (!isset($infoCorreios['Servicos']['cServico'][0])) {
 			return ERRO_CORREIOS_CONTEUDO_INVALIDO;
 		}
-		extract($infoCorreios['CalculoPrecos']['DadosPostais']);
+		extract($infoCorreios['Servicos']['cServico'][0]);
 		return array(
-			'ufOrigem' => $uf_origem,
-			'ufDestino' => $uf_destino,
-			'capitalOrigem' => ($local_origem == 'Capital'),
-			'capitalDestino' => ($local_destino == 'Capital'),
-			'valorMaoPropria' => $mao_propria,
-			'valorTarifaValorDeclarado' => $tarifa_valor_declarado,
-			'valorFrete' => ($preco_postal - $tarifa_valor_declarado - $mao_propria),
-			'valorTotal' => $preco_postal
+			'valorMaoPropria' => $ValorMaoPropria,
+			'valorTarifaValorDeclarado' => $ValorValorDeclarado,
+			'valorFrete' => ($Valor - $ValorValorDeclarado - $ValorMaoPropria),
+			'valorTotal' => $Valor,
+			'prazoEntrega' => $PrazoEntrega,
+			'entregaDomiciliar' => $EntregaDomiciliar === 'S',
+			'entregaSabado' => $EntregaSabado === 'S'
 		);
 	}
 
