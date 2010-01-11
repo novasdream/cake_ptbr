@@ -15,7 +15,7 @@ Configure::write('Config.language', 'pt-br');
 
 // Adicionando o caminho do locale
 $localePaths = Configure::read('localePaths');
-$localePaths[] = dirname(dirname(__FILE__)) . DS . 'locale';
+$localePaths[] = dirname(dirname(__FILE__)) . DS . 'locale' . DS;
 Configure::write('localePaths', $localePaths);
 
 // Alteração do inflection
