@@ -48,6 +48,7 @@
 		'mao' => 'maos',
 		'orfao' => 'orfaos',
 		'pais' => 'paises',
+		'pai' => 'pais',
 		'pao' => 'paes',
 		'perfil' => 'perfis',
 		'projetil' => 'projeteis',
