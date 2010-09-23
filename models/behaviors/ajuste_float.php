@@ -52,6 +52,24 @@ class AjusteFloatBehavior extends ModelBehavior {
  * @param array $query
  * @return array
  * @access public
+ */	
+	function beforeValidate(&$model){
+		foreach($model->data[$model->alias] as $field => $value){
+			if ($model->hasField($field) && $model->_schema[$field]['type'] == 'float'){
+				$model->data[$model->alias][$field] = str_replace(array('.', ','), array('', '.'), $value);
+			}
+		}
+		return true;
+	}
+	
+/**
+ * Before Find
+ * Transforma o valor de BRL para o formato SQL antes de executar uma query
+ * com conditions.
+ * 
+ * @param object $model
+ * @return array
+ * @access public
  */
 	function beforeFind(&$model, $query) {
 		if (is_array($query['conditions'])) {
@@ -95,6 +113,8 @@ class AjusteFloatBehavior extends ModelBehavior {
 
 		return true;
 	}
+	
+
 
 /**
  * After Find
