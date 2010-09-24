@@ -49,6 +49,7 @@ class AjusteFloatBehavior extends ModelBehavior {
  * com conditions.
  * 
  * @param object $model
+ * @param array $query
  * @return array
  * @access public
  */
@@ -58,20 +59,20 @@ class AjusteFloatBehavior extends ModelBehavior {
 				if (strpos($field, '.') == false) {
 					$field = $model->alias . '.' . $field;
 				}
-				list($Model, $field) = explode('.', $field);
-				$Model = ($Model != $model->alias) ? $model->{$Model} : $model;
-				if ($Model->hasField($field) && $Model->_schema[$field]['type'] == 'float') {
+				list($modelName, $field) = explode('.', $field);
+				$modelName = ($modelName != $model->alias) ? $model->{$modelName} : $model;
+				if ($modelName->hasField($field) && $modelName->_schema[$field]['type'] == 'float') {
 					$value = str_replace(',', '.', $value);
 					if (isset($query['conditions'][$field])) {
 						$query['conditions'][$field] = $value;
 					}
-					if (isset($query['conditions'][$Model->alias . '.' . $field])) {
-						$query['conditions'][$Model->alias . '.' . $field] = $value;
+					if (isset($query['conditions'][$modelName->alias . '.' . $field])) {
+						$query['conditions'][$modelName->alias . '.' . $field] = $value;
 					}
 				}
 			}
 		}
-		return($query);
+		return $query;
 	}
 
 /**
