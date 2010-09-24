@@ -100,6 +100,7 @@ class AjusteFloatBehavior extends ModelBehavior {
  * @param boolean $primary
  * @return void
  * @access public
+ * @deprecated Isto deve ser feito na view
  */
 	function afterFind(&$model, $results, $primary) {
 		foreach ($results as $key => $r) {
