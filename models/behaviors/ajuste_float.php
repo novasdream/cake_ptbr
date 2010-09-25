@@ -54,20 +54,23 @@ class AjusteFloatBehavior extends ModelBehavior {
  * @access public
  */
 	function beforeFind(&$model, $query) {
-		if (is_array($query['conditions']) && count($query['conditions']) > 0) {
+		if (is_array($query['conditions'])) {
 			foreach ($query['conditions'] as $field => $value) {
-				if (strpos($field, '.') == false) {
+				if (strpos($field, '.') === false) {
 					$field = $model->alias . '.' . $field;
 				}
 				list($modelName, $field) = explode('.', $field);
-				$modelName = ($modelName != $model->alias) ? $model->{$modelName} : $model;
-				if ($modelName->hasField($field) && $modelName->_schema[$field]['type'] == 'float') {
-					$value = str_replace(',', '.', $value);
+				$useModel = ($modelName != $model->alias) ? $model->{$modelName} : $model;
+				if ($useModel->hasField($field) && $useModel->_schema[$field]['type'] == 'float') {
+					if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
+						continue;
+					}
+					$value = str_replace(',', '.', str_replace('.', '', $value));
 					if (isset($query['conditions'][$field])) {
 						$query['conditions'][$field] = $value;
 					}
-					if (isset($query['conditions'][$modelName->alias . '.' . $field])) {
-						$query['conditions'][$modelName->alias . '.' . $field] = $value;
+					if (isset($query['conditions'][$useModel->alias . '.' . $field])) {
+						$query['conditions'][$useModel->alias . '.' . $field] = $value;
 					}
 				}
 			}
