@@ -49,13 +49,15 @@ class AjusteFloatBehavior extends ModelBehavior {
  * com conditions.
  * 
  * @param object $model
- * @param array $query
- * @return array
+ * @return boolean
  * @access public
  */	
-	function beforeValidate(&$model){
-		foreach($model->data[$model->alias] as $field => $value){
-			if ($model->hasField($field) && $model->_schema[$field]['type'] == 'float'){
+	function beforeValidate(&$model) {
+		foreach($model->data[$model->alias] as $field => $value) {
+			if ($model->hasField($field) && $model->_schema[$field]['type'] == 'float') {
+				if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
+					continue;
+				}
 				$model->data[$model->alias][$field] = str_replace(array('.', ','), array('', '.'), $value);
 			}
 		}
@@ -107,6 +109,9 @@ class AjusteFloatBehavior extends ModelBehavior {
 		$data =& $model->data[$model->alias];
 		foreach ($data as $name => $value) {
 			if (in_array($name, $this->floatFields[$model->alias])) {
+				if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
+					continue;
+				}
 				$data[$name] = str_replace(array('.', ','), array('', '.'), $value);
 			}
 		}

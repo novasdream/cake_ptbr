@@ -157,6 +157,33 @@ class CakePtbrAjusteFloat extends CakeTestCase {
 	}
 
 /**
+ * testeBeforeValidate
+ *
+ * @return void
+ * @access public
+ */
+	function testBeforeValidate() {
+		$this->Produto->validate = array(
+			'valor' => 'decimal'
+		);
+
+		$query = array('Produto' => array('valor' => 10.1));
+		$this->Produto->set($query);
+		$this->assertTrue($this->Produto->validates());
+
+		$query = array('Produto' => array('valor' => '10.1'));
+		$this->Produto->set($query);
+		$this->assertTrue($this->Produto->validates());
+
+		$query = array('Produto' => array('valor' => '10.000,01'));
+		$this->Produto->set($query);
+		$this->assertTrue($this->Produto->validates());
+		$this->assertEqual($this->Produto->data['Produto']['valor'], 10000.01);
+
+		$this->Produto->validate = array();
+	}
+
+/**
  * testSave
  *
  * @retun void
