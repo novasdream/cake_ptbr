@@ -135,7 +135,7 @@ class AjusteFloatBehavior extends ModelBehavior {
 		foreach ($results as $key => $r) {
 			if (isset($r[$model->alias]) && is_array($r[$model->alias])) {
 				foreach (array_keys($r[$model->alias]) as $arrayKey) {
-					if (in_array($arrayKey, $this->floatFields[$model->alias])) {
+					if (in_array($arrayKey, $this->floatFields[$model->alias]) && $r[$model->alias][$arrayKey] !== null) {
 						$results[$key][$model->alias][$arrayKey] = number_format($r[$model->alias][$arrayKey], 2, ',', '.');
 					}
 				}
