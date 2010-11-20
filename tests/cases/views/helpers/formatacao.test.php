@@ -79,6 +79,17 @@ class CakePtbrFormatacaoCase extends CakeTestCase {
 	}
 
 /**
+ * testTempo
+ *
+ * @return void
+ * @access public
+ */
+	function testTempo() {
+		$this->assertEqual($this->Formatacao->tempo(), 'menos de 1 minuto');
+		$this->assertEqual($this->Formatacao->tempo(strtotime('-1 hour')), '1 hora');
+	}
+
+/**
  * testPrecisao
  *
  * @retun void
