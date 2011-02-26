@@ -12,7 +12,7 @@
  */
 
 // Alteração do inflector
-$_uninflected = array('atlas', 'lapis', 'onibus', 'pires', 'virus', '.*x');
+$_uninflected = array('atlas', 'lapis', 'onibus', 'pires', 'virus', '.*x', 'status');
 $_pluralIrregular = array(
 	'abdomens' => 'abdomen',
 	'alemao' => 'alemaes',
