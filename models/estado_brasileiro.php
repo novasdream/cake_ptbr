@@ -34,6 +34,14 @@ class EstadoBrasileiro extends AppModel {
 	var $useTable = false;
 
 /**
+ * Schema do banco de dados
+ *
+ * @var array
+ * @access protected
+ */
+	var $_schema = array();
+
+/**
  * Construtor
  *
  * @param mixed $id
