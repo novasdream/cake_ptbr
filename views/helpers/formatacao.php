@@ -96,7 +96,10 @@ class FormatacaoHelper extends AppHelper {
 		if (is_null($data)) {
 			return time();
 		}
-		return $data;
+		if (is_integer($data) || ctype_digit($data)) {
+			return (int)$data;
+		}
+		return strtotime((string)$data);
 	}
 
 /**
@@ -116,6 +119,8 @@ class FormatacaoHelper extends AppHelper {
 		if (strpos($dataHora, '/') !== false) {
 			$_dataHora = str_replace('/', '-', $dataHora);
 			$_dataHora = date('ymdHi', strtotime($_dataHora));
+		} elseif (is_string($dataHora)) {
+			$_dataHora = date('ymdHi', strtotime($dataHora));
 		} else {
 			$_dataHora = date('ymdHi', $dataHora);
 		}
