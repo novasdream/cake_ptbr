@@ -154,6 +154,21 @@ class CakePtbrAjusteFloat extends CakeTestCase {
 		);
 		$result = $this->Produto->beforeFindBehaviors($query);
 		$this->assertEqual($result, $expected);
+
+		$query = array(
+			'conditions' => array(
+				'`Produto`.`nome`' => '1.000,00',
+				'`Produto`.`valor`' => 1500.03
+			)
+		);
+		$expected = array(
+			'conditions' => array(
+				'`Produto`.`nome`' => '1.000,00',
+				'`Produto`.`valor`' => '1500.03'
+			)
+		);
+		$result = $this->Produto->beforeFindBehaviors($query);
+		$this->assertEqual($result, $expected);
 	}
 
 /**
