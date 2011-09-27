@@ -34,7 +34,7 @@ class EstadosHelper extends AppHelper {
  *				'uf' para mostrar apenas as siglas, sem os nomes
  */
 	public function select($fieldName, $selected = null, $attributes = array()) {
-		App::import('Vendor', 'CakePTBR.Estados');
+		App::import('Vendor', 'CakePtbr.Estados');
 		$options = Estados::lista();
 		if (isset($attributes['uf']) && $attributes['uf'] === true) {
 			$estados = array_keys($options);

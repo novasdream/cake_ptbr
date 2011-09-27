@@ -110,8 +110,7 @@ class FormatacaoHelper extends AppHelper {
  * @return string Descrição da data em tempo ex.: a 1 minuto, a 1 semana
  * @access public
  */
-
-	protected function tempo($dataHora = null, $limite = '30 days'){
+	public function tempo($dataHora = null, $limite = '30 days'){
 		if (!$dataHora) {
 			$dataHora = time();
 		}
