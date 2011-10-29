@@ -129,12 +129,14 @@ class CorreiosBehavior extends ModelBehavior {
 
 		$data = array(
 			'resposta' => 'paginaCorreios',
+			'data' => date('d/m/Y'),
+			'dataAtual' => date('d/m/Y'),
 			'servico' => CORREIOS_SEDEX,
 			'cepOrigem' => $cep,
 			'cepDestino' => $cep,
 			'peso' => 1,
 			'MaoPropria' => 'N',
-			'valorDeclarado' => 0,
+			'valorDeclarado' => '',
 			'avisoRecebimento' => 'N',
 			'Altura' => '',
 			'Comprimento' => '',
@@ -169,7 +171,8 @@ class CorreiosBehavior extends ModelBehavior {
 		preg_match('/\<b\>Cidade\/UF:\<\/b\>\s*\<\/td\>\s*\<td[^\>]*>([^\<]*)\</', $escopoReduzido, $matches);
 		list($cidade, $uf) = explode('/', $matches[1]);
 
-		return compact('logradouro', 'bairro', 'cidade', 'uf');
+		$result = compact('logradouro', 'bairro', 'cidade', 'uf');
+		return array_map('trim', $result);
 	}
 
 /**
@@ -193,7 +196,12 @@ class CorreiosBehavior extends ModelBehavior {
  * @access protected
  */
 	function _requisitaUrl($url, $method, $query) {
-		$HttpSocket = new HttpSocket();
+		$defaultHeader = array(
+			'Origin' => 'http://www.correios.com.br',
+			'Referer' => 'http://www.correios.com.br/encomendas/prazo/default.cfm',
+			'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.835.202 Chrome/14.0.835.202 Safari/535.1'
+		);
+		$HttpSocket = new HttpSocket(array('request' => array('header' => $defaultHeader)));
 		$uri = array(
 			'scheme' => 'http',
 			'host' => 'www.correios.com.br',
