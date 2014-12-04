@@ -51,7 +51,7 @@ class AjusteDataBehavior extends ModelBehavior {
  * @return boolean
  * @access public
  */
-	public function beforeValidate(Model $model) {
+	public function beforeValidate(Model $model, $config = array()) {
 		return $this->ajustarDatas($model);
 	}
 
@@ -62,7 +62,7 @@ class AjusteDataBehavior extends ModelBehavior {
  * @return boolean
  * @access public
  */
-	public function beforeSave(Model $model) {
+	public function beforeSave(Model $model, $config = array()) {
 		return $this->ajustarDatas($model);
 	}
 
