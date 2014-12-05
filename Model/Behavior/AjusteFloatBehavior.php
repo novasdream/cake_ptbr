@@ -52,7 +52,7 @@ class AjusteFloatBehavior extends ModelBehavior {
  * @return boolean
  * @access public
  */	
-	public function beforeValidate(Model $model) {
+	public function beforeValidate(Model $model, $config = array()) {
 		foreach($model->data[$model->alias] as $field => $value) {
 			if ($model->hasField($field) && $model->_schema[$field]['type'] == 'float') {
 				if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
@@ -106,7 +106,7 @@ class AjusteFloatBehavior extends ModelBehavior {
  * @return void
  * @access public
  */
-	public function beforeSave(Model $model) {
+	public function beforeSave(Model $model, $config = array()) {
 		$data =& $model->data[$model->alias];
 		foreach ($data as $name => $value) {
 			if (in_array($name, $this->floatFields[$model->alias])) {
