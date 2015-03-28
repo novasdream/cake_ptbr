@@ -9,8 +9,11 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\TestCase\Model\Behavior;
 
-App::uses('Model', 'Model');
+use App\Model\Model;
+use Cake\Core\App;
+
 App::import('Correios', 'CakePtbr.Model/Behavior');
 
 Mock::generatePartial(
@@ -53,7 +56,7 @@ class CakePtbr extends Model {
  * Correios Test Case
  *
  */
-class CakePtbrCorreiosCase extends CakeTestCase {
+class CakePtbrCorreiosCase extends TestCase {
 
 /**
  * Correios

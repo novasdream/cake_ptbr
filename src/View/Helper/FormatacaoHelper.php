@@ -9,6 +9,10 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\View\Helper;
+
+use App\View\Helper\AppHelper;
+
 
 /**
  * Formatação Helper

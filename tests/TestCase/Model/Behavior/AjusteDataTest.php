@@ -9,9 +9,11 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\TestCase\Model\Behavior;
 
-App::uses('Model', 'Model');
-App::uses('AjusteData', 'CakePtbr.Model/Behavior');
+use App\Model\Model;
+use CakePtbr\Model\Behavior\AjusteData;
+
 
 /**
  * CakePtbrNoticia
@@ -169,7 +171,7 @@ class CakePtbrNoticiaArrayComCampos extends CakePtbrNoticia {
  * AjusteData Test Case
  *
  */
-class CakePtbrAjusteData extends CakeTestCase {
+class CakePtbrAjusteData extends TestCase {
 
 /**
  * Envio

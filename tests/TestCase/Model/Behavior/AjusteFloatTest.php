@@ -9,9 +9,11 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\TestCase\Model\Behavior;
 
-App::uses('Model', 'Model');
-App::uses('AjusteFloat', 'CakePtbr.Model/Behavior');
+use App\Model\Model;
+use CakePtbr\Model\Behavior\AjusteFloat;
+
 
 /**
  * Produto
@@ -53,7 +55,7 @@ class Produto extends CakeTestModel {
  * AjusteFloat Test Case
  *
  */
-class CakePtbrAjusteFloat extends CakeTestCase {
+class CakePtbrAjusteFloat extends TestCase {
 
 /**
  * Fixtures

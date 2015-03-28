@@ -9,15 +9,18 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\TestCase\Model;
 
-App::uses('EstadoBrasileiro', 'CakePtbr.Model');
-App::uses('AppModel', 'Model');
+use App\Model\AppModel;
+use CakePtbr\Model\EstadoBrasileiro;
+use Cake\TestSuite\TestCase;
+
 
 /**
  * EstadoBrasileiro Test Case
  *
  */
-class EstadoBrasileiroTestCase extends CakeTestCase {
+class EstadoBrasileiroTestCase extends TestCase {
 
 /**
  * EstadoBrasileiro

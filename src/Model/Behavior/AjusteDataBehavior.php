@@ -9,6 +9,11 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Model\Behavior;
+
+use Cake\Model\Behavior;
+use Cake\Model\Model;
+
 
 /**
  * AjusteDataBehavior

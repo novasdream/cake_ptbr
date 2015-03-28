@@ -9,6 +9,12 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Model\Behavior;
+
+use App\Network\Http\HttpSocket;
+use Cake\Core\Configure;
+use Cake\Model\Behavior;
+use Cake\Utility\Xml;
 
 // Tipo de frete
 define('CORREIOS_SEDEX', 40010);
@@ -25,8 +31,6 @@ define('ERRO_CORREIOS_EXCESSO_PESO', -1001);
 define('ERRO_CORREIOS_FALHA_COMUNICACAO', -1002);
 define('ERRO_CORREIOS_CONTEUDO_INVALIDO', -1003);
 
-App::uses('Xml', 'Utility');
-App::uses('HttpSocket', 'Network/Http');
 
 /**
  * CorreiosBehavior

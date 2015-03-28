@@ -9,6 +9,10 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\Fixture;
+
+use Cake\TestSuite\Fixture\TestFixture;
+
 
 /**
  * Produto Fixture

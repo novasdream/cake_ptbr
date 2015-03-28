@@ -9,14 +9,20 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\TestCase\Config;
 
-include CakePlugin::path('CakePtbr') . DS . 'Config' . DS . 'inflections.php';
+use Cake\Core\Plugin;
+use Cake\TestSuite\TestCase;
+use Cake\Utility\Inflector;
+
+
+include Plugin::path('CakePtbr') . DS . 'Config' . DS . 'inflections.php';
 
 /**
  * Inflections Test Case
  *
  */
-class CakePtbrInflectionsCase extends CakeTestCase {
+class CakePtbrInflectionsCase extends TestCase {
 
 /**
  * testPlural

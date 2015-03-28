@@ -9,13 +9,15 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\TestCase\View\Helper;
 
-App::uses('AppHelper', 'View/Helper');
-App::uses('FormHelper', 'View/Helper');
-App::uses('HtmlHelper', 'View/Helper');
-App::uses('Controller', 'Controller');
-App::uses('EstadosHelper', 'CakePtbr.View/Helper');
-App::uses('Estados', 'CakePtbr.Vendor');
+use App\View\Helper\AppHelper;
+use App\View\Helper\FormHelper;
+use App\View\Helper\HtmlHelper;
+use CakePtbr\Vendor\Estados;
+use CakePtbr\View\Helper\EstadosHelper;
+use Cake\Controller\Controller;
+
 
 /**
  * Controller Test
@@ -44,7 +46,7 @@ class ControllerTestController extends Controller {
  * Estado Test Case
  *
  */
-class CakePtbrEstadosCase extends CakeTestCase {
+class CakePtbrEstadosCase extends TestCase {
 
 /**
  * Estados
@@ -70,7 +72,7 @@ class CakePtbrEstadosCase extends CakeTestCase {
  */
 	public function setUp() {
 		parent::setUp();
-		$Controller = new ControllerTestController(new CakeRequest(), new CakeResponse());
+		$Controller = new ControllerTestController(new Request(), new Response());
 		$View = new View($Controller);
 		$this->Estados = new EstadosHelper($View);
 		$this->Estados->Form = new FormHelper($View);

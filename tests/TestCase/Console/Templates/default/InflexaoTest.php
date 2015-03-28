@@ -9,14 +9,20 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\TestCase\Console\Templates;
 
-require CakePlugin::path('CakePtbr') . DS . 'Console' . DS . 'Templates' . DS . 'default' . DS . 'Inflexao.php';
+use Cake\Core\Plugin;
+use Cake\TestSuite\TestCase;
+
+
+
+require Plugin::path('CakePtbr') . DS . 'Console' . DS . 'Templates' . DS . 'default' . DS . 'Inflexao.php';
 
 /**
  * Inflexao
  *
  */
-class InflexaoTest extends CakeTestCase {
+class InflexaoTest extends TestCase {
 
 /**
  * testAcentos

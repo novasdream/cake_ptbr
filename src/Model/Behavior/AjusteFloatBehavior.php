@@ -10,6 +10,11 @@
  * @author        Daniel Pakuschewski <contato@danielpk.com.br>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Model\Behavior;
+
+use Cake\Model\Behavior;
+use Cake\Model\Model;
+
 
 /**
  * AjusteFloatBehavior

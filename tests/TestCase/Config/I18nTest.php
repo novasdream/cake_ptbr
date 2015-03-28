@@ -9,14 +9,19 @@
  * @author        Juan Basso <jrbasso@gmail.com>
  * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace CakePtbr\Test\TestCase\Config;
 
-include CakePlugin::path('CakePtbr') . 'Config' . DS . 'traducao_core.php';
+use Cake\Core\Plugin;
+use Cake\TestSuite\TestCase;
+
+
+include Plugin::path('CakePtbr') . 'Config' . DS . 'traducao_core.php';
 
 /**
  * I18n Test Case
  *
  */
-class CakePtbrI18nCase extends CakeTestCase {
+class CakePtbrI18nCase extends TestCase {
 
 /**
  * testCore
