@@ -11,9 +11,39 @@
  * @link          http://wiki.github.com/jrbasso/cake_ptbr/inflections
  */
 
+
+
 // Alteração do inflector
-$_uninflected = array('atlas', 'lapis', 'onibus', 'pires', 'virus', '.*x', 'status');
-$_pluralIrregular = array(
+
+Inflector::rules('singular', [
+		'/^(.*)(oes|aes|aos)$/i' => '\1ao',
+		'/^(.*)(a|e|o|u)is$/i' => '\1\2l',
+		'/^(.*)e?is$/i' => '\1il',
+		'/^(.*)(r|s|z)es$/i' => '\1\2',
+		'/^(.*)ns$/i' => '\1m',
+		'/^(.*)s$/i' => '\1',
+]);
+
+Inflector::rules('plural', [
+		'/^(.*)ao$/i' => '\1oes',
+		'/^(.*)(r|s|z)$/i' => '\1\2es',
+		'/^(.*)(a|e|o|u)l$/i' => '\1\2is',
+		'/^(.*)il$/i' => '\1is',
+		'/^(.*)(m|n)$/i' => '\1ns',
+		'/^(.*)$/i' => '\1s'
+]);
+
+Inflector::rules('uninflected', [
+	'atlas', 
+	'lapis', 
+	'onibus', 
+	'pires', 
+	'virus', 
+	'.*x', 
+	'status'
+]);
+
+Inflector::rules('irregular', [
 	'abdomens' => 'abdomen',
 	'alemao' => 'alemaes',
 	'artesa' => 'artesaos',
@@ -49,63 +79,78 @@ $_pluralIrregular = array(
 	'sacristao' => 'sacristaes',
 	'sotao' => 'sotaos',
 	'tabeliao' => 'tabeliaes'
-);
+]);
 
-Inflector::rules('singular', array(
-	'rules' => array(
-		'/^(.*)(oes|aes|aos)$/i' => '\1ao',
-		'/^(.*)(a|e|o|u)is$/i' => '\1\2l',
-		'/^(.*)e?is$/i' => '\1il',
-		'/^(.*)(r|s|z)es$/i' => '\1\2',
-		'/^(.*)ns$/i' => '\1m',
-		'/^(.*)s$/i' => '\1',
-	),
-	'uninflected' => $_uninflected,
-	'irregular' => array_flip($_pluralIrregular)
-), true);
-
-Inflector::rules('plural', array(
-	'rules' => array(
-		'/^(.*)ao$/i' => '\1oes',
-		'/^(.*)(r|s|z)$/i' => '\1\2es',
-		'/^(.*)(a|e|o|u)l$/i' => '\1\2is',
-		'/^(.*)il$/i' => '\1is',
-		'/^(.*)(m|n)$/i' => '\1ns',
-		'/^(.*)$/i' => '\1s'
-	),
-	'uninflected' => $_uninflected,
-	'irregular' => $_pluralIrregular
-), true);
-
-Inflector::rules('transliteration', array(
-	'/À|Á|Â|Ã|Ä|Å/' => 'A',
-	'/È|É|Ê|Ë/' => 'E',
-	'/Ì|Í|Î|Ï/' => 'I',
-	'/Ò|Ó|Ô|Õ|Ö|Ø/' => 'O',
-	'/Ù|Ú|Û|Ü/' => 'U',
-	'/Ç/' => 'C',
-	'/Ð/' => 'D',
-	'/Ñ/' => 'N',
-	'/Š/' => 'S',
-	'/Ý|Ÿ/' => 'Y',
-	'/Ž/' => 'Z',
-	'/Æ/' => 'AE',
-	'/ß/'=> 'ss',
-	'/Œ/' => 'OE',
-	'/à|á|â|ã|ä|å|ª/' => 'a',
-	'/è|é|ê|ë|&/' => 'e',
-	'/ì|í|î|ï/' => 'i',
-	'/ò|ó|ô|õ|ö|ø|º/' => 'o',
-	'/ù|ú|û|ü/' => 'u',
-	'/ç/' => 'c',
-	'/ð/' => 'd',
-	'/ñ/' => 'n',
-	'/š/' => 's',
-	'/ý|ÿ/' => 'y',
-	'/ž/' => 'z',
-	'/æ/' => 'ae',
-	'/œ/' => 'oe',
-	'/ƒ/' => 'f'
-));
-
-unset($_uninflected, $_pluralIrregular);
+Inflector::rules('transliteration', [
+	'À' => 'A',
+	'Á' => 'A',
+	'Â' => 'A',
+	'Ã' => 'A',
+	'Ä' => 'A',
+	'Å' => 'A',
+	'È' => 'E',
+	'É' => 'E',
+	'Ê' => 'E',
+	'Ë' => 'E',
+	'Ì' => 'I',
+	'Í' => 'I',
+	'Î' => 'I',
+	'Ï' => 'I',
+	'Ò' => 'O',
+	'Ó' => 'O',
+	'Ô' => 'O',
+	'Õ' => 'O',
+	'Ö' => 'O',
+	'Ø' => 'O',
+	'Ù' => 'U',
+	'Ú' => 'U',
+	'Û' => 'U',
+	'Ü' => 'U',
+	'Ç' => 'C',
+	'Ð' => 'D',
+	'Ñ' => 'N',
+	'Š' => 'S',
+	'Ý' => 'Y',
+	'Ÿ' => 'Y',
+	'Ž' => 'Z',
+	'Æ' => 'AE',
+	'ß'=> 'ss',
+	'Œ' => 'OE',
+	'à' => 'a',
+	'á' => 'a',
+	'â' => 'a',
+	'ã' => 'a',
+	'ä' => 'a',
+	'å' => 'a',
+	'ª' => 'a',
+	'è' => 'e',
+	'é' => 'e',
+	'ê' => 'e',
+	'ë' => 'e',
+	'&' => 'e',
+	'ì' => 'i',
+	'í' => 'i',
+	'î' => 'i',
+	'ï' => 'i',
+	'ò' => 'o',
+	'ó' => 'o',
+	'ô' => 'o',
+	'õ' => 'o',
+	'ö' => 'o',
+	'ø' => 'o',
+	'º' => 'o',
+	'ù' => 'u',
+	'ú' => 'u',
+	'û' => 'u',
+	'ü'	=> 'u',
+	'ç' => 'c',
+	'ð' => 'd',	
+	'ñ' => 'n',
+	'š' => 's',
+	'ý' => 'y',
+	'ÿ' => 'ÿ',
+	'ž' => 'z',
+	'æ' => 'ae',
+	'œ' => 'oe',
+	'ƒ' => 'f'
+]);
