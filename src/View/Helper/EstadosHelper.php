@@ -37,6 +37,7 @@ class EstadosHelper extends Helper
      * @param string $selected Sigla do estado que deve ser selecionado
      * @param array $attributes Mesmos atributos do Form::select(). Também é possível passar o param
      *                'uf' para mostrar apenas as siglas, sem os nomes
+     * @return string
      */
     public function select($fieldName, $selected = null, $attributes = array())
     {
