@@ -12,8 +12,11 @@
  */
 namespace CakePtbr\Model\Behavior;
 
-use Cake\Model\Behavior;
-use Cake\Model\Model;
+use Cake\Database\Expression\Comparison;
+use Cake\Event\Event;
+use Cake\ORM\Behavior;
+use Cake\ORM\Entity;
+use Cake\ORM\Query;
 
 
 /**
@@ -21,108 +24,84 @@ use Cake\Model\Model;
  *
  * @link http://wiki.github.com/jrbasso/cake_ptbr/behavior-ajustefloat
  */
-class AjusteFloatBehavior extends ModelBehavior {
+class AjusteFloatBehavior extends Behavior
+{
 
-/**
- * Campos do tipo float
- *
- * @var array
- * @access public
- */
-	public $floatFields = array();
+    /**
+     * Campos do tipo float
+     *
+     * @var array
+     * @access public
+     */
+    public $floatFields = array();
 
-/**
- * Setup
- *
- * @param Model $model
- * @param array $config
- * @return void
- * @access public
- */
-	public function setup(Model $model, $config = array()) {
-		$this->floatFields[$model->alias] = array();
-		foreach ($model->schema() as $field => $spec) {
-			if ($spec['type'] == 'float') {
-				$this->floatFields[$model->alias][] = $field;
-			}
-		}
-	}
-	
-/**
- * Before Find
- * Transforma o valor de BRL para o formato SQL antes de executar uma query
- * com conditions.
- * 
- * @param object $model
- * @return boolean
- * @access public
- */	
-	public function beforeValidate(Model $model, $config = array()) {
-		foreach($model->data[$model->alias] as $field => $value) {
-			if ($model->hasField($field) && $model->_schema[$field]['type'] == 'float') {
-				if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
-					continue;
-				}
-				$model->data[$model->alias][$field] = str_replace(array('.', ','), array('', '.'), $value);
-			}
-		}
-		return true;
-	}
-	
-/**
- * Before Find
- * Transforma o valor de BRL para o formato SQL antes de executar uma query
- * com conditions.
- * 
- * @param object $model
- * @return array
- * @access public
- */
-	public function beforeFind(Model $model, $query) {
-		if (is_array($query['conditions'])) {
-			foreach ($query['conditions'] as $field => $value) {
-				if (strpos($field, '.') === false) {
-					$field = $model->alias . '.' . $field;
-				}
-				list($modelName, $field) = explode('.', $field);
-				$modelName = str_replace('`', '', $modelName);
-				$useModel = ($modelName != $model->alias) ? $model->{$modelName} : $model;
-				if ($useModel->hasField($field) && $useModel->_schema[$field]['type'] == 'float') {
-					if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
-						continue;
-					}
-					$value = str_replace(',', '.', str_replace('.', '', $value));
-					if (isset($query['conditions'][$field])) {
-						$query['conditions'][$field] = $value;
-					}
-					if (isset($query['conditions'][$useModel->alias . '.' . $field])) {
-						$query['conditions'][$useModel->alias . '.' . $field] = $value;
-					}
-				}
-			}
-		}
-		return $query;
-	}
+    /**
+     * Bootstraping the behavior
+     *
+     * @param array $config
+     * @return void
+     * @access public
+     */
+    public function initialize(array $config = [])
+    {
+        $this->floatFields[$this->_table->alias()] = array();
+        foreach ($this->_table->schema()->columns() as $field) {
+            if ($this->_table->schema()->columnType($field) == "float") {
+                $this->floatFields[$this->_table->alias()][] = $field;
+            }
+        }
+    }
 
-/**
- * Before Save
- *
- * @param object $model
- * @return void
- * @access public
- */
-	public function beforeSave(Model $model, $config = array()) {
-		$data =& $model->data[$model->alias];
-		foreach ($data as $name => $value) {
-			if (in_array($name, $this->floatFields[$model->alias])) {
-				if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
-					continue;
-				}
-				$data[$name] = str_replace(array('.', ','), array('', '.'), $value);
-			}
-		}
+    /**
+     * Before save
+     * Transforma o valor de BRL para o formato SQL antes de  salvar a entidade
+     * no banco de dados
+     *
+     * @param Event $event
+     * @param Entity $entity
+     * @param \ArrayObject $config
+     * @return bool
+     * @access public
+     */
+    public function beforeSave(Event $event, Entity $entity, \ArrayObject $config = array())
+    {
+        foreach ($entity->toArray() as $field => $value) {
+            if ($this->_table->hasField($field) && $this->_table->schema()->columnType($field) === "float") {
+                if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
+                    continue;
+                }
+                $entity->set($field, str_replace(array('.', ','), array('', '.'), $value));
+            }
+        }
+        return true;
+    }
 
-		return true;
-	}
+    /**
+     * Before Find
+     * Transforma o valor de BRL para o formato SQL antes de executar uma query
+     * com conditions.
+     *
+     * @param Event $event
+     * @param Query $query
+     * @param array $options
+     * @param $primary
+     * @return array
+     * @access public
+     */
+    public function beforeFind(Event $event, Query $query, $options = [], $primary)
+    {
+        $query->clause("where")->traverse(function($comparison) use ($this) {
+            /**
+             * @var Comparison $comparison
+             */
+            if (isset($comparison)) {
+                if ($this->_table->schema()->columnType($comparison->getField()) === "float") {
+                    if (is_string($comparison->getValue()) && !preg_match('/^[0-9]+(\.[0-9]+)?$/', $comparison->getValue())) {
+                        $comparison->setValue(str_replace(',', '.', str_replace('.', '', $comparison->getValue())));
+                    }
+                }
+            }
+        });
+    }
 
 }
