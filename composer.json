@@ -16,6 +16,9 @@
     "cakephp/cakephp": "~3.0",
     "composer/installers": "*"
   },
+  "require-dev": {
+    "phpunit": "*"
+  },
   "autoload": {
     "psr-4": {
       "CakePtbr\\": "src"
