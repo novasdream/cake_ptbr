@@ -15,13 +15,13 @@ use Cake\Core\Plugin;
 use Cake\TestSuite\TestCase;
 
 
-include Plugin::path('CakePtbr') . 'Config' . DS . 'traducao_core.php';
+include ROOT . DS . 'config' . DS . 'traducao_core.php';
 
 /**
  * I18n Test Case
  *
  */
-class CakePtbrI18nCase extends TestCase {
+class I18nCase extends TestCase {
 
 /**
  * testCore
@@ -30,8 +30,8 @@ class CakePtbrI18nCase extends TestCase {
  * @access public
  */
 	public function testCore() {
-		$this->assertEqual(__('Missing Component File'), 'Arquivo de Component não encontrado');
-		$this->assertEqual(__d('default', 'Missing Database'), 'Database não encontrado');
+		$this->assertEquals(__('Missing Component File'), 'Arquivo de Component não encontrado');
+		$this->assertEquals(__d('default', 'Missing Database'), 'Database não encontrado');
 	}
 
 /**

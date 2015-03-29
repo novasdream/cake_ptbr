@@ -211,7 +211,7 @@ class CorreiosBehavior extends Behavior
             'Referer' => 'http://www.correios.com.br/encomendas/prazo/default.cfm',
             'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.835.202 Chrome/14.0.835.202 Safari/535.1'
         ];
-        $HttpSocket = new Client(['request' => ['header' => $defaultHeader]]);
+        $httpClient = new Client(['request' => ['header' => $defaultHeader]]);
         $uri = [
             'scheme' => 'http',
             'host' => 'www.correios.com.br',
@@ -220,11 +220,11 @@ class CorreiosBehavior extends Behavior
         ];
         if ($method === 'get') {
             $uri['query'] = $query;
-            $retornoCorreios = trim($HttpSocket->get($uri));
+            $retornoCorreios = trim($httpClient->get($uri));
         } else {
-            $retornoCorreios = $HttpSocket->post($uri, $query);
+            $retornoCorreios = $httpClient->post($uri, $query);
         }
-        if ($HttpSocket->response['status']['code'] != 200) {
+        if ($httpClient->response['status']['code'] != 200) {
             return ERRO_CORREIOS_FALHA_COMUNICACAO;
         }
         return $retornoCorreios;
