@@ -11,8 +11,10 @@
  */
 namespace CakePtbr\Model\Behavior;
 
-use Cake\Model\Behavior;
-use Cake\Model\Model;
+use Cake\Event\Event;
+use Cake\ORM\Behavior;
+use Cake\ORM\Entity;
+use Cake\ORM\Table;
 
 
 /**
@@ -20,111 +22,92 @@ use Cake\Model\Model;
  *
  * @link http://wiki.github.com/jrbasso/cake_ptbr/behavior-ajustedata
  */
-class AjusteDataBehavior extends ModelBehavior {
+class AjusteDataBehavior extends Behavior
+{
 
-/**
- * Configuração dos campos
- *
- * @var array
- * @access public
- */
-	public $campos;
+    /**
+     * Configuração dos campos
+     *
+     * @var array
+     * @access public
+     */
+    public $campos;
 
-/**
- * Setup
- *
- * @param object $model
- * @param array $config
- * @return void
- * @access public
- */
-	public function setup(Model $model, $config = array()) {
-		if (empty($config)) {
-			// Caso n�o seja informado os campos, ele ir� buscar no schema
-			$this->campos[$model->name] = $this->_buscaCamposDate($model);
-		} elseif (!is_array($config)) {
-			$this->campos[$model->name] = array($config);
-		} else {
-			$this->campos[$model->name] = $config;
-		}
-	}
+    public function initialize(array $config = [])
+    {
+        if (empty($config)) {
+            // Caso não seja informado os campos, ele irá buscar no schema
+            $this->campos[$this->_table->alias()] = $this->_buscaCamposDate();
+        } elseif (!is_array($config)) {
+            $this->campos[$this->_table->alias()] = [$config];
+        } else {
+            $this->campos[$this->_table->alias()] = $config;
+        }
+    }
 
-/**
- * Before Validate
- *
- * @param object $model
- * @return boolean
- * @access public
- */
-	public function beforeValidate(Model $model, $config = array()) {
-		return $this->ajustarDatas($model);
-	}
+    /**
+     * @param Event $event
+     * @param Entity $entity
+     * @param \ArrayObject $options
+     * @return bool
+     */
+    public function beforeSave(Event $event, Entity $entity, \ArrayObject $options = [] )
+    {
+        return $this->ajustarDatas($entity);
+    }
 
-/**
- * Before Save
- *
- * @param object $model
- * @return boolean
- * @access public
- */
-	public function beforeSave(Model $model, $config = array()) {
-		return $this->ajustarDatas($model);
-	}
+    /**
+     * Corrigir as datas
+     * @param Entity $entity Uma instância
+     * @return bool
+     */
+    public function ajustarDatas(Entity $entity)
+    {
+        $data =& $entity->toArray();
+        foreach ($this->campos[$this->_table->alias()] as $campo) {
+            if (isset($data[$campo])) {
+                // DATA E HORA
+                if (preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4} \d{1,2}\:\d{1,2}/', $data[$campo])) {
+                    $novaData = explode(' ', $data[$campo]);
+                    list($dia, $mes, $ano) = explode('/', $novaData[0]);
+                    list($hora, $minuto, $segundo) = explode(':', $novaData[1]);
+                    if (strlen($ano) == 2) {
+                        if ($ano > 50) $ano += 1900;
+                        else $ano += 2000;
+                    }
+                    $entity->set($campo, "$ano-$mes-$dia $hora:$minuto:$segundo");
+                } // DATA
+                elseif (preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4}/', $data[$campo])) {
+                    list($dia, $mes, $ano) = explode('/', $data[$campo]);
+                    if (strlen($ano) == 2) {
+                        if ($ano > 50) $ano += 1900;
+                        else $ano += 2000;
+                    }
+                    $entity->set("$ano-$mes-$dia");
+                }
+            }
+        }
+        return true;
+    }
 
-/**
- * Corrigir as datas
- *
- * @param object $model
- * @return boolean
- * @access public
- */
-	public function ajustarDatas(Model $model) {
-		$data =& $model->data[$model->name];
-		foreach ($this->campos[$model->name] as $campo) {
-			if (isset($data[$campo])) {
-				// DATA E HORA
-				if(preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4} \d{1,2}\:\d{1,2}/', $data[$campo])) {
-					$novaData = explode(' ', $data[$campo]);
-					list($dia, $mes, $ano) = explode('/', $novaData[0]);
-					list($hora, $minuto, $segundo) = explode(':', $novaData[1]);
-					if (strlen($ano) == 2) {
-						if ($ano > 50) $ano += 1900;
-						else $ano += 2000;
-					}
-					$data[$campo] = "$ano-$mes-$dia $hora:$minuto:$segundo";
-				}
-				// DATA
-				elseif(preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4}/', $data[$campo])) {
-					list($dia, $mes, $ano) = explode('/', $data[$campo]);
-					if (strlen($ano) == 2) {
-						if ($ano > 50) $ano += 1900;
-						else $ano += 2000;
-					}
-					$data[$campo] = "$ano-$mes-$dia";
-				}
-			}
-		}
-		return true;
-	}
-
-/**
- * Buscar campos de data nos dados da model
- *
- * @param object $model
- * @return array Lista dos campos
- * @access protected
- */
-	public function _buscaCamposDate(Model &$model) {
-		$schema = $model->schema();
-		if (!is_array($schema)) {
-			return array();
-		}
-		$saida = array();
-		foreach ($schema as $campo => $infos) {
-			if ($infos['type'] == 'date' && !in_array($campo, array('created', 'updated', 'modified'))) {
-				$saida[] = $campo;
-			}
-		}
-		return $saida;
-	}
+    /**
+     * Buscar campos de data nos dados da model
+     *
+     * @return array Lista dos campos
+     * @access protected
+     */
+    public function _buscaCamposDate()
+    {
+        $colunas = $this->_table->schema()->columns();
+        if (!is_array($colunas)) {
+            return [];
+        }
+        $saida = [];
+        foreach ($colunas as $campo) {
+            if ($this->_table->schema()->columnType($campo) === 'date' && !in_array($campo, array('created', 'updated', 'modified'))) {
+                $saida[] = $campo;
+            }
+        }
+        return $saida;
+    }
 }
