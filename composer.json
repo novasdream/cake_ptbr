@@ -17,7 +17,8 @@
     "composer/installers": "*"
   },
   "require-dev": {
-    "phpunit": "*"
+    "phpunit/phpunit": "4.5.*",
+    "cakephp/cakephp-codesniffer": "2.*"
   },
   "autoload": {
     "psr-4": {
