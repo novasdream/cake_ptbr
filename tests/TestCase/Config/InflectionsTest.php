@@ -11,106 +11,130 @@
  */
 namespace CakePtbr\Test\TestCase\Config;
 
-use Cake\Core\Plugin;
-use Cake\TestSuite\TestCase;
 use Cake\Utility\Inflector;
+use Cake\TestSuite\TestCase;
+require_once ROOT . DS . 'config' . DS . 'inflections.php';
 
-
-include Plugin::path('CakePtbr') . DS . 'Config' . DS . 'inflections.php';
 
 /**
  * Inflections Test Case
  *
  */
-class CakePtbrInflectionsCase extends TestCase {
+class CakePtbrInflectionsCase extends TestCase
+{
+    public function setUp()
+    {
+        parent::setUp();
 
-/**
- * testPlural
- *
- * @retun void
- * @access public
- */
-	public function testPlural() {
-		$this->assertEqual(Inflector::pluralize('Compra'), 'Compras');
-		$this->assertEqual(Inflector::pluralize('Caminhao'), 'Caminhoes');
-		$this->assertEqual(Inflector::pluralize('Motor'), 'Motores');
-		$this->assertEqual(Inflector::pluralize('Bordel'), 'Bordeis');
-		$this->assertEqual(Inflector::pluralize('palavra_chave'), 'palavra_chaves');
-		$this->assertEqual(Inflector::pluralize('Abril'), 'Abris');
-		$this->assertEqual(Inflector::pluralize('Azul'), 'Azuis');
-		$this->assertEqual(Inflector::pluralize('Alcool'), 'Alcoois');
-		// irregulares
-		$this->assertEqual(Inflector::pluralize('Perfil'), 'Perfis');
-		$this->assertEqual(Inflector::pluralize('Alemao'), 'Alemaes');
-		$this->assertEqual(Inflector::pluralize('Mao'), 'Maos');
-		$this->assertEqual(Inflector::pluralize('Cao'), 'Caes');
-		$this->assertEqual(Inflector::pluralize('Reptil'), 'Repteis');
-		$this->assertEqual(Inflector::pluralize('Sotao'), 'Sotaos');
-		$this->assertEqual(Inflector::pluralize('Pais'), 'Paises');
-		$this->assertEqual(Inflector::pluralize('Pai'), 'Pais');
-	}
+    }
 
-/**
- * testSingular
- *
- * @retun void
- * @access public
- */
-	public function testSingular() {
-		$this->assertEqual(Inflector::singularize('Compras'), 'Compra');
-		$this->assertEqual(Inflector::singularize('Caminhoes'), 'Caminhao');
-		$this->assertEqual(Inflector::singularize('Motores'), 'Motor');
-		$this->assertEqual(Inflector::singularize('Bordeis'), 'Bordel');
-		$this->assertEqual(Inflector::singularize('palavras_chaves'), 'palavras_chave');
-		$this->assertEqual(Inflector::singularize('Abris'), 'Abril');
-		$this->assertEqual(Inflector::singularize('Azuis'), 'Azul');
-		$this->assertEqual(Inflector::singularize('Alcoois'), 'Alcool');
-		// irregulares
-		$this->assertEqual(Inflector::singularize('Perfis'), 'Perfil');
-		$this->assertEqual(Inflector::singularize('Alemaes'), 'Alemao');
-		$this->assertEqual(Inflector::singularize('Maos'), 'Mao');
-		$this->assertEqual(Inflector::singularize('Caes'), 'Cao');
-		$this->assertEqual(Inflector::singularize('Repteis'), 'Reptil');
-		$this->assertEqual(Inflector::singularize('Sotaos'), 'Sotao');
-		$this->assertEqual(Inflector::singularize('Paises'), 'Pais');
-		$this->assertEqual(Inflector::singularize('Pais'), 'Pai');
-	}
 
-/**
- * testNaoPluralizaveis
- *
- * @retun void
- * @access public
- */
-	public function testNaoPluralizaveis() {
-		// singularize
-		$this->assertEqual(Inflector::singularize('Atlas'), 'Atlas');
-		$this->assertEqual(Inflector::singularize('Lapis'), 'Lapis');
-		$this->assertEqual(Inflector::singularize('Onibus'), 'Onibus');
-		$this->assertEqual(Inflector::singularize('Pires'), 'Pires');
-		$this->assertEqual(Inflector::singularize('Virus'), 'Virus');
-		$this->assertEqual(Inflector::singularize('Torax'), 'Torax');
-		// pluralize
-		$this->assertEqual(Inflector::pluralize('Atlas'), 'Atlas');
-		$this->assertEqual(Inflector::pluralize('Lapis'), 'Lapis');
-		$this->assertEqual(Inflector::pluralize('Onibus'), 'Onibus');
-		$this->assertEqual(Inflector::pluralize('Pires'), 'Pires');
-		$this->assertEqual(Inflector::pluralize('Virus'), 'Virus');
-		$this->assertEqual(Inflector::pluralize('Torax'), 'Torax');
-	}
+    /**
+     * testPlural
+     *
+     * @retun void
+     * @access public
+     */
+    public function testPlural()
+    {
+        $this->assertEquals('Compras', Inflector::pluralize('Compra'));
+        $this->assertEquals('Caminhoes', Inflector::pluralize('Caminhao'));
+        $this->assertEquals('Motores', Inflector::pluralize('Motor'));
+        $this->assertEquals('Bordeis', Inflector::pluralize('Bordel'));
+        $this->assertEquals('palavra_chaves', Inflector::pluralize('palavra_chave'));
+        $this->assertEquals('Abris', Inflector::pluralize('Abril'));
+        $this->assertEquals('Azuis', Inflector::pluralize('Azul'));
+        $this->assertEquals('Alcoois', Inflector::pluralize('Alcool'));
+        $this->assertEquals('Perfis', Inflector::pluralize('Perfil'));
+        $this->testPluralIrregular();
+    }
 
-/**
- * testSlug
- *
- * @retun void
- * @access public
- */
-	public function testSlug() {
-		$this->assertEqual(Inflector::slug('João'), 'Joao');
-		$this->assertEqual(Inflector::slug('Conseqüência'), 'Consequencia');
-		$this->assertEqual(Inflector::slug('Linguiça não útil água'), 'Linguica_nao_util_agua');
-		$this->assertEqual(Inflector::slug('ÃÓ&'), 'AOe');
-		$this->assertEqual(Inflector::slug('äü au Sandoval'), 'au_au_Sandoval');
-	}
+    /**
+     * testSingular
+     *
+     * @retun void
+     * @access public
+     */
+    public function testSingular()
+    {
+        $this->assertEquals(Inflector::singularize('Compras'), 'Compra');
+        $this->assertEquals(Inflector::singularize('Caminhoes'), 'Caminhao');
+        $this->assertEquals(Inflector::singularize('Motores'), 'Motor');
+        $this->assertEquals(Inflector::singularize('Bordeis'), 'Bordel');
+        $this->assertEquals(Inflector::singularize('palavras_chaves'), 'palavras_chave');
+        $this->assertEquals(Inflector::singularize('Abris'), 'Abril');
+        $this->assertEquals(Inflector::singularize('Azuis'), 'Azul');
+        $this->assertEquals('Alcool', Inflector::singularize('Alcoois'));
+        $this->testSingularIrregular();
+
+    }
+
+    /**
+     * testNaoPluralizaveis
+     *
+     * @retun void
+     * @access public
+     */
+    public function testNaoPluralizaveis()
+    {
+        // singularize
+        $this->assertEquals(Inflector::singularize('Atlas'), 'Atlas');
+        $this->assertEquals(Inflector::singularize('Lapis'), 'Lapis');
+        $this->assertEquals(Inflector::singularize('Onibus'), 'Onibus');
+        $this->assertEquals(Inflector::singularize('Pires'), 'Pires');
+        $this->assertEquals(Inflector::singularize('Virus'), 'Virus');
+        $this->assertEquals(Inflector::singularize('Torax'), 'Torax');
+        // pluralize
+        $this->assertEquals(Inflector::pluralize('Atlas'), 'Atlas');
+        $this->assertEquals(Inflector::pluralize('Lapis'), 'Lapis');
+        $this->assertEquals(Inflector::pluralize('Onibus'), 'Onibus');
+        $this->assertEquals(Inflector::pluralize('Pires'), 'Pires');
+        $this->assertEquals(Inflector::pluralize('Virus'), 'Virus');
+        $this->assertEquals(Inflector::pluralize('Torax'), 'Torax');
+    }
+
+    /**
+     * testSlug
+     *
+     * @retun void
+     * @access public
+     */
+    public function testSlug()
+    {
+        $this->assertEquals(Inflector::slug('João'), 'Joao');
+        $this->assertEquals(Inflector::slug('Conseqüência'), 'Consequencia');
+        $this->assertEquals(Inflector::slug('Linguiça não útil água'), 'Linguica-nao-util-agua');
+        $this->assertEquals(Inflector::slug('ÃÓ&'), 'AOe');
+        $this->assertEquals(Inflector::slug('äü au Sandoval'), 'au-au-Sandoval');
+    }
+
+    /**
+     * teste plural irregular
+     * @return void
+     */
+    public function testPluralIrregular()
+    {
+// irregulares
+        $this->assertEquals('Alemaes', Inflector::pluralize('Alemao'));
+        $this->assertEquals('Maos', Inflector::pluralize('Mao'));
+        $this->assertEquals('Caes', Inflector::pluralize('Cao'));
+        $this->assertEquals('Repteis', Inflector::pluralize('Reptil'));
+        $this->assertEquals('Sotaos', Inflector::pluralize('Sotao'));
+        $this->assertEquals('Paises', Inflector::pluralize('Pais'));
+        $this->assertEquals('Pais', Inflector::pluralize('Pai'));
+    }
+
+    public function testSingularIrregular()
+    {
+        // irregulares
+        $this->assertEquals(Inflector::singularize('Perfis'), 'Perfil');
+        $this->assertEquals(Inflector::singularize('Alemaes'), 'Alemao');
+        $this->assertEquals(Inflector::singularize('Maos'), 'Mao');
+        $this->assertEquals(Inflector::singularize('Caes'), 'Cao');
+        $this->assertEquals(Inflector::singularize('Repteis'), 'Reptil');
+        $this->assertEquals(Inflector::singularize('Sotaos'), 'Sotao');
+        $this->assertEquals(Inflector::singularize('Paises'), 'Pais');
+        $this->assertEquals(Inflector::singularize('Pais'), 'Pai');
+    }
 
 }

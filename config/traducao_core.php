@@ -11,8 +11,8 @@
  * @link          http://wiki.github.com/jrbasso/cake_ptbr/traduzir-as-mensagens-do-core
  */
 
-// Definindo idioma da aplicação
-Configure::write('Config.language', 'pt-br');
+use Cake\Core\Configure;
 
-// Adicionando o caminho do locale
-App::build(array('Locale' => array(Plugin::path('CakePtbr') . 'Locale' . DS)));
+// Definindo idioma da aplicação
+ini_set('intl.default_locale', 'pt_BR');
+

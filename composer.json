@@ -22,7 +22,9 @@
   },
   "autoload": {
     "psr-4": {
-      "CakePtbr\\": "src"
+      "CakePtbr\\": "src",
+      "CakePtbr\\Test\\Fixture\\": "tests\\Fixture",
+      "Locale": "src/Locale"
     }
   },
   "autoload-dev": {
