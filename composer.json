@@ -24,6 +24,7 @@
     "psr-4": {
       "CakePtbr\\": "src",
       "CakePtbr\\Test\\Fixture\\": "tests\\Fixture",
+      "CakePtbr\\Console": "bin\\Templates",
       "Locale": "src/Locale"
     }
   },

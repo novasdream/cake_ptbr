@@ -35,6 +35,7 @@ define('CAKE', CORE_PATH . 'src' . DS);
 
 require ROOT . '/vendor/autoload.php';
 require CORE_PATH . 'config/bootstrap.php';
+require_once ROOT . DS . 'config' . DS . 'inflections.php';
 
 Cake\Core\Configure::write('App', ['namespace' => 'Crud\Test\App']);
 Cake\Core\Configure::write('debug', true);
@@ -69,7 +70,7 @@ Cake\Core\Configure::write('Session', [
     'defaults' => 'php'
 ]);
 
-Cake\Core\Plugin::load('Crud', ['path' => ROOT . DS, 'autoload' => true]);
+Cake\Core\Plugin::load('CakePtbr', ['path' => ROOT . DS, 'autoload' => true]);
 
 Cake\Routing\DispatcherFactory::add('Routing');
 Cake\Routing\DispatcherFactory::add('ControllerFactory');
