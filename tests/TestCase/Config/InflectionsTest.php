@@ -20,8 +20,13 @@ require_once ROOT . DS . 'config' . DS . 'inflections.php';
  * Inflections Test Case
  *
  */
-class CakePtbrInflectionsCase extends TestCase
+class InflectionsTest extends TestCase
 {
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        Inflector::reset();
+    }
 
     /**
      * testPlural
