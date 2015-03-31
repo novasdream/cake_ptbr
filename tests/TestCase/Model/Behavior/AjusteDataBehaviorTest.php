@@ -11,163 +11,10 @@
  */
 namespace CakePtbr\Test\TestCase\Model\Behavior;
 
-
+use Cake\Datasource\ConnectionManager;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-
-
-/**
- * CakePtbrNoticia
- *
- */
-class NoticiaTable extends Table
-{
-
-    /**
-     * Nome da model
-     *
-     * @var string
-     * @access public
-     */
-    public $name = 'Noticia';
-
-    /**
-     * Usar tabela?
-     *
-     * @var boolean
-     * @access public
-     */
-    public $useTable = false;
-
-    public function exists($conditions)
-    {
-        return true;
-    }
-
-
-}
-
-/**
- * CakePtbrNoticiaSemNada
- *
- */
-class NoticiaSemNada extends NoticiaTable
-{
-
-    /**
-     * Nome da model
-     *
-     * @var string
-     * @access public
-     */
-    public $name = 'NoticiaSemNada';
-
-
-    /**
-     * Bootstrap
-     * @param array $config
-     */
-    public function initialize($config)
-    {
-        $this->addBehavior("AjustDataBehavior");
-    }
-
-}
-
-/**
- * CakePtbrNoticiaString
- *
- */
-class NoticiaStringTable extends NoticiaTable
-{
-
-    /**
-     * Nome da model
-     *
-     * @var string
-     * @access public
-     */
-    public $name = 'NoticiaString';
-
-    public function initialize($config)
-    {
-        $this->addBehavior("AjusteDataBehavior");
-    }
-}
-
-/**
- * CakePtbrNoticiaArrayVazio
- *
- */
-class NoticiaArrayVazio extends NoticiaTable
-{
-
-    /**
-     * Nome da model
-     *
-     * @var string
-     * @access public
-     */
-    public $name = 'CakePtbrNoticiaArrayVazio';
-
-    /**
-     * Lista de Behaviors
-     *
-     * @var array
-     * @access public
-     */
-    public $actsAs = array('CakePtbr.AjusteData' => array());
-
-}
-
-/**
- * CakePtbrNoticiaArrayComCampo
- *
- */
-class NoticiaArrayComCampo extends NoticiaTable
-{
-
-    /**
-     * Nome da model
-     *
-     * @var string
-     * @access public
-     */
-    public $name = 'CakePtbrNoticiaArrayComCampo';
-
-    /**
-     * Lista de Behaviors
-     *
-     * @var array
-     * @access public
-     */
-    public $actsAs = array('CakePtbr.AjusteData' => array('data'));
-
-}
-
-/**
- * CakePtbrNoticiaArrayComCampos
- *
- */
-class NoticiaArrayComCamposTable extends NoticiaTable
-{
-
-    /**
-     * Nome da model
-     *
-     * @var string
-     * @access public
-     */
-    public $name = 'CakePtbrNoticiaArrayComCampos';
-
-    /**
-     * Lista de Behaviors
-     *
-     * @var array
-     * @access public
-     */
-    public $actsAs = array('CakePtbr.AjusteData' => array('data', 'publicado'));
-}
 
 /**
  * AjusteData Test Case
@@ -175,134 +22,106 @@ class NoticiaArrayComCamposTable extends NoticiaTable
  */
 class AjusteDataBehaviorTest extends TestCase
 {
-    /**
-     * Envio
-     *
-     * @var array
-     * @access protected
-     */
-    public $_envio = array(
-        'id' => 1,
-        'nome' => 'Teste',
-        'data' => '20/03/2009',
-        'data_falsa' => '30/01/2009',
-        'publicado' => '01/01/2010'
-    );
+
+    public $fixtures = [
+        "plugin.CakePtbr.noticias"
+    ];
 
     /**
-     * testSemNada
+     * @var Table $Noticias
+     */
+    public $Noticias;
+    private $db;
+
+
+    /**
+     * setup method
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->Noticias = TableRegistry::get("CakePtbr.Noticias");
+        $this->db = ConnectionManager::get('test');
+    }
+
+    /**
+     * tear down
+     * @return void
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
+        $this->Noticias->removeBehavior("AjusteData");
+//        unset($this->Noticias, $this->Noticias);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        TableRegistry::clear();
+    }
+
+
+    public function testDeteccaoAutomatica()
+    {
+        $this->Noticias->addBehavior("CakePtbr.AjusteData");
+        $noticia = $this->__preparaNoticia();
+
+        $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
+        $this->assertEquals("2015-03-25 16:42:05", $noticia->get("publicado_em"));
+
+        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
+    }
+
+
+    /**
+     * testCampoEmArray
      *
      * @retun void
      * @access public
      */
-    public function testSemNada()
+    public function testCampoEmArray()
     {
-        $esperado = array(
-            'CakePtbrNoticiaSemNada' => array(
-                'id' => 1,
-                'nome' => 'Teste',
-                'data' => '20/03/2009',
-                'data_falsa' => '30/01/2009',
-                'publicado' => '01/01/2010'
-            )
-        );
-        $this->_testModel('CakePtbrNoticiaSemNada', $esperado);
+        $this->Noticias->addBehavior("CakePtbr.AjusteData", ["autorizado_em"]);
+        $noticia = $this->__preparaNoticia();
+
+        $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
+
+        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
     }
 
     /**
-     * Método auxiliar para executar os testes
-     *
-     * @param string $nomeModel Nome da model
-     * @param array $esperado Valor esperado
-     * @retun void
-     * @access protected
-     */
-    public function _testModel($nomeModel, $esperado)
-    {
-        $Model = new $nomeModel();
-        $Model->create();
-        $Model->save(array($nomeModel => $this->_envio));
-        $this->assertEqual($Model->data, $esperado);
-    }
-
-    /**
-     * testString
+     * testCamposEmArray
      *
      * @retun void
      * @access public
      */
-    public function testString()
+    public function testCamposEmArray()
     {
-        $esperado = array(
-            'CakePtbrNoticiaString' => array(
-                'id' => 1,
-                'nome' => 'Teste',
-                'data' => '2009-03-20',
-                'data_falsa' => '30/01/2009',
-                'publicado' => '01/01/2010'
-            )
-        );
-        $this->_testModel('CakePtbrNoticiaString', $esperado);
+        $this->Noticias->addBehavior("CakePtbr.AjusteData", ["autorizado_em", "publicado_em"]);
+        $noticia = $this->__preparaNoticia();
+
+        $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
+        $this->assertEquals("2015-03-25 16:42:05", $noticia->get("publicado_em"));
+
+        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
     }
 
     /**
-     * testArrayVazio
-     *
-     * @retun void
-     * @access public
+     * @return \Cake\Datasource\EntityInterface|mixed
      */
-    public function testArrayVazio()
+    private function __preparaNoticia()
     {
-        $esperado = array(
-            'CakePtbrNoticiaArrayVazio' => array(
-                'id' => 1,
-                'nome' => 'Teste',
-                'data' => '20/03/2009',
-                'data_falsa' => '30/01/2009',
-                'publicado' => '01/01/2010'
-            )
-        );
-        $this->_testModel('CakePtbrNoticiaArrayVazio', $esperado);
+        $noticia = $this->Noticias->get(1);
+        $noticia->set("id", null);
+        $noticia->isNew(true);
+        $noticia->set("autorizado_em", "22/03/2015");
+        $noticia->set("publicado_em", "25/03/2015 16:42:05");
+        $this->Noticias->save($noticia);
+        return $noticia;
     }
 
-    /**
-     * testArrayComCampo
-     *
-     * @retun void
-     * @access public
-     */
-    public function testArrayComCampo()
-    {
-        $esperado = array(
-            'CakePtbrNoticiaArrayComCampo' => array(
-                'id' => 1,
-                'nome' => 'Teste',
-                'data' => '2009-03-20',
-                'data_falsa' => '30/01/2009',
-                'publicado' => '01/01/2010'
-            )
-        );
-        $this->_testModel('CakePtbrNoticiaArrayComCampo', $esperado);
-    }
-
-    /**
-     * testArrayComCampos
-     *
-     * @retun void
-     * @access public
-     */
-    public function testArrayComCampos()
-    {
-        $esperado = array(
-            'CakePtbrNoticiaArrayComCampos' => array(
-                'id' => 1,
-                'nome' => 'Teste',
-                'data' => '2009-03-20',
-                'data_falsa' => '30/01/2009',
-                'publicado' => '2010-01-01'
-            )
-        );
-        $this->_testModel('CakePtbrNoticiaArrayComCampos', $esperado);
-    }
 
 }

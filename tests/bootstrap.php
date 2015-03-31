@@ -22,7 +22,6 @@ define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', $findRoot());
 define('APP_DIR', 'App');
 define('WEBROOT_DIR', 'webroot');
-define('APP', ROOT . '/tests/App/');
 define('CONFIG', ROOT . '/tests/config/');
 define('WWW_ROOT', ROOT . DS . WEBROOT_DIR . DS);
 define('TESTS', ROOT . DS . 'tests' . DS);
@@ -37,7 +36,14 @@ require ROOT . '/vendor/autoload.php';
 require CORE_PATH . 'config/bootstrap.php';
 require_once ROOT . DS . 'config' . DS . 'inflections.php';
 
-Cake\Core\Configure::write('App', ['namespace' => 'Crud\Test\App']);
+
+define('APP', rtrim(sys_get_temp_dir(), DS) . DS . APP_DIR . DS);
+if (!is_dir(APP)) {
+    mkdir(APP, 0770, true);
+}
+Cake\Core\Configure::write('App', [
+    'namespace' => 'App'
+]);
 Cake\Core\Configure::write('debug', true);
 
 $TMP = new \Cake\Filesystem\Folder(TMP);
@@ -76,11 +82,24 @@ Cake\Routing\DispatcherFactory::add('Routing');
 Cake\Routing\DispatcherFactory::add('ControllerFactory');
 
 // Ensure default test connection is defined
-if (!getenv('db_dsn')) {
-    putenv('db_dsn=sqlite:///:memory:');
+if (!getenv('db_class') || !getenv("dbdsn")) {
+    putenv('db_class=Cake\Database\Driver\Mysql');
+    putenv('db_dsn=sqlite::memory:');
 }
 
 Cake\Datasource\ConnectionManager::config('test', [
-    'url' => getenv('db_dsn'),
-    'timezone' => 'UTC'
+    'className' => 'Cake\Database\Connection',
+    'driver' => getenv('db_class'),
+//    'dsn' => getenv('db_dsn'),
+    'database' => 'test',
+    'username' => 'root',
+    'password' => 'admin',
+    'timezone' => 'UTC',
+    'quoteIdentifiers' => true,
+    'cacheMetadata' => true
 ]);
+
+// Reportar erros
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
