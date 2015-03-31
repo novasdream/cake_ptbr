@@ -41,8 +41,6 @@ class AjusteDataBehavior extends Behavior
         if (empty($config)) {
             // Caso não seja informado os campos, ele irá buscar no schema
             $this->campos[$this->_table->alias()] = $this->__buscaCamposDate();
-        } elseif (!is_array($config)) {
-            $this->campos[$this->_table->alias()] = [$config];
         } else {
             $this->campos[$this->_table->alias()] = $config;
         }
@@ -54,7 +52,7 @@ class AjusteDataBehavior extends Behavior
      * @param \ArrayObject $options Opções do evento
      * @return bool
      */
-    public function beforeSave(Event $event, Entity $entity, \ArrayObject $options = [])
+    public function beforeSave(Event $event, Entity $entity, \ArrayObject $options )
     {
         return $this->ajustarDatas($entity);
     }
@@ -73,7 +71,7 @@ class AjusteDataBehavior extends Behavior
                 if (preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4} \d{1,2}\:\d{1,2}/', $data[$campo])) {
                     $this->__ajustarDataHora($entity, $data, $campo);
                 } elseif (preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4}/', $data[$campo])) { // DATA
-                    list($dia, $mes, $ano) = $this->__ajustarData($entity, $data, $campo);
+                    $this->__ajustarData($entity, $data, $campo);
                 }
             }
         }
@@ -109,6 +107,9 @@ class AjusteDataBehavior extends Behavior
      */
     private function __ajustarDataHora(Entity $entity, $campo)
     {
+        if ( is_array($campo) ) {
+            $campo = implode('', $campo);
+        }
         $novaData = $this->__separarDataHora($entity->get($campo));
         list($dia, $mes, $ano) = explode('/', $novaData[0]);
         list($hora, $minuto, $segundo) = explode(':', $novaData[1]);
@@ -131,6 +132,9 @@ class AjusteDataBehavior extends Behavior
      */
     private function __ajustarData(Entity $entity, $campo)
     {
+        if ( is_array($campo) ) {
+            $campo = implode('', $campo);
+        }
         list($dia, $mes, $ano) = explode('/', $entity->get($campo));
         if (strlen($ano) == 2) {
             if ($ano > 50) {
