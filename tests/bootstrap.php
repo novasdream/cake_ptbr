@@ -32,9 +32,19 @@ define('CAKE_CORE_INCLUDE_PATH', ROOT . '/vendor/cakephp/cakephp');
 define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
 define('CAKE', CORE_PATH . 'src' . DS);
 
+
+if (!defined('WINDOWS')) {
+    if (DS == '\\' || substr(PHP_OS, 0, 3) === 'WIN') {
+        define('WINDOWS', true);
+    } else {
+        define('WINDOWS', false);
+    }
+}
+
+
+
 require ROOT . '/vendor/autoload.php';
 require CORE_PATH . 'config/bootstrap.php';
-require_once ROOT . DS . 'config' . DS . 'inflections.php';
 
 
 define('APP', rtrim(sys_get_temp_dir(), DS) . DS . APP_DIR . DS);
@@ -82,22 +92,37 @@ Cake\Routing\DispatcherFactory::add('Routing');
 Cake\Routing\DispatcherFactory::add('ControllerFactory');
 
 // Ensure default test connection is defined
-if (!getenv('db_class') || !getenv("dbdsn")) {
-    putenv('db_class=Cake\Database\Driver\Mysql');
-    putenv('db_dsn=sqlite::memory:');
+if (!getenv('db_class')) {
+    putenv('db_class=Cake\Database\Driver\Sqlite');
+    putenv('db_dsn=sqlite::tmp/test');
+}
+
+if (WINDOWS) {
+    Cake\Datasource\ConnectionManager::config('test', [
+        'className' => 'Cake\Database\Connection',
+        'driver' => 'Cake\Database\Driver\Mysql',
+        'database' => 'test',
+        'username' => 'root',
+        'password' => '',
+        'timezone' => 'UTC',
+        'quoteIdentifiers' => false,
+        'cacheMetadata' => true,
+    ]);
+    return;
 }
 
 Cake\Datasource\ConnectionManager::config('test', [
     'className' => 'Cake\Database\Connection',
     'driver' => getenv('db_class'),
-//    'dsn' => getenv('db_dsn'),
-    'database' => 'test',
-    'username' => 'root',
-    'password' => 'admin',
+    'url' => getenv('db_dsn'),
+    'database' => getenv('db_database'),
+    'username' => getenv('db_username'),
+    'password' => getenv('db_password'),
     'timezone' => 'UTC',
-    'quoteIdentifiers' => true,
+    'quoteIdentifiers' => false,
     'cacheMetadata' => true
 ]);
+
 
 \Cake\Log\Log::config([
     'debug' => [

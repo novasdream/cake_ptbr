@@ -22,6 +22,8 @@ use Cake\ORM\Query;
 /**
  * AjusteFloatBehavior
  *
+ *
+ *
  * @link http://wiki.github.com/jrbasso/cake_ptbr/behavior-ajustefloat
  */
 class AjusteFloatBehavior extends Behavior
@@ -33,7 +35,7 @@ class AjusteFloatBehavior extends Behavior
      * @var array
      * @access public
      */
-    public $floatFields = array();
+    private $__floatFields = [];
 
     /**
      * Bootstraping the behavior
@@ -44,10 +46,10 @@ class AjusteFloatBehavior extends Behavior
      */
     public function initialize(array $config = [])
     {
-        $this->floatFields[$this->_table->alias()] = array();
+        $this->__floatFields[$this->_table->alias()] = [];
         foreach ($this->_table->schema()->columns() as $field) {
             if ($this->_table->schema()->columnType($field) == "float") {
-                $this->floatFields[$this->_table->alias()][] = $field;
+                $this->__floatFields[$this->_table->alias()][] = $field;
             }
         }
     }
@@ -59,20 +61,21 @@ class AjusteFloatBehavior extends Behavior
      *
      * @param Event $event
      * @param Entity $entity
-     * @param \ArrayObject $config
      * @return bool
      * @access public
      */
-    public function beforeSave(Event $event, Entity $entity, \ArrayObject $config = array())
+    public function beforeSave(Event $event, Entity $entity)
     {
-        foreach ($entity->toArray() as $field => $value) {
-            if ($this->_table->hasField($field) && $this->_table->schema()->columnType($field) === "float") {
-                if (!is_string($value) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $value)) {
+        foreach ($this->_table->schema()->columns() as $campo) {
+            $valor = $entity->get($campo);
+            if ( !empty($valor) && $this->_table->schema()->columnType($campo) === "float") {
+                if ( !is_string($valor) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $valor)) {
                     continue;
                 }
-                $entity->set($field, str_replace(array('.', ','), array('', '.'), $value));
+                $entity->set($campo, str_replace(['.', ','], ['', '.'], $valor));
             }
         }
+
         return true;
     }
 
@@ -90,18 +93,20 @@ class AjusteFloatBehavior extends Behavior
      */
     public function beforeFind(Event $event, Query $query, $options = [], $primary)
     {
-        $query->clause("where")->traverse(function($comparison) use ($this) {
-            /**
-             * @var Comparison $comparison
-             */
-            if (isset($comparison)) {
-                if ($this->_table->schema()->columnType($comparison->getField()) === "float") {
-                    if (is_string($comparison->getValue()) && !preg_match('/^[0-9]+(\.[0-9]+)?$/', $comparison->getValue())) {
-                        $comparison->setValue(str_replace(',', '.', str_replace('.', '', $comparison->getValue())));
-                    }
+        $query->clause("where")->traverse([$this, "traverseClause"]);
+    }
+
+    public function traverseClause($comparison) {
+        /**
+         * @var Comparison $comparison
+         */
+        if (isset($comparison)) {
+            if ($this->_table->schema()->columnType($comparison->getField()) === "float") {
+                if (is_string($comparison->getValue()) && !preg_match('/^[0-9]+(\.[0-9]+)?$/', $comparison->getValue())) {
+                    $comparison->setValue(str_replace(',', '.', str_replace('.', '', $comparison->getValue())));
                 }
             }
-        });
+        }
     }
 
 }
