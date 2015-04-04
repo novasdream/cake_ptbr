@@ -99,7 +99,22 @@ Cake\Datasource\ConnectionManager::config('test', [
     'cacheMetadata' => true
 ]);
 
+\Cake\Log\Log::config([
+    'debug' => [
+        'className' => 'Cake\Log\Engine\FileLog',
+        'path' => LOGS,
+        'file' => 'debug',
+        'levels' => ['notice', 'info', 'debug'],
+    ],
+    'error' => [
+        'className' => 'Cake\Log\Engine\FileLog',
+        'path' => LOGS,
+        'file' => 'error',
+        'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
+    ],
+]);
+
 // Reportar erros
-ini_set('error_reporting', E_ALL);
+ini_set('error_reporting', E_ALL & ~E_STRICT);
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');

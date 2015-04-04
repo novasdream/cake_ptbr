@@ -38,8 +38,7 @@ class ProdutosFixture extends TestFixture
         'id' => ['type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'],
         'nome' => ['type' => 'string', 'null' => false, 'default' => NULL],
         'valor' => ['type' => 'float', 'null' => false, 'default' => NULL],
-        'indexes' => ['PRIMARY' => ['column' => 'id', 'unique' => 1]],
-        'tableParameters' => ['charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB']
+        '_constraints' => [ 'primary' => ['type' => 'primary', 'columns' => ['id']] ]
     ];
 
     /**

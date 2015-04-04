@@ -6,19 +6,19 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @author        Juan Basso <jrbasso@gmail.com>
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @author     Juan Basso <jrbasso@gmail.com>
+ * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 namespace CakePtbr\Test\TestCase\Model\Behavior;
 
 use Cake\Datasource\ConnectionManager;
+use Cake\I18n\Time;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
  * AjusteData Test Case
- *
  */
 class AjusteDataBehaviorTest extends TestCase
 {
@@ -31,7 +31,6 @@ class AjusteDataBehaviorTest extends TestCase
      * @var Table $Noticias
      */
     public $Noticias;
-    private $db;
 
 
     /**
@@ -42,7 +41,6 @@ class AjusteDataBehaviorTest extends TestCase
     {
         parent::setUp();
         $this->Noticias = TableRegistry::get("CakePtbr.Noticias");
-        $this->db = ConnectionManager::get('test');
     }
 
     /**
@@ -52,34 +50,27 @@ class AjusteDataBehaviorTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
-        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
-        $this->Noticias->removeBehavior("AjusteData");
-//        unset($this->Noticias, $this->Noticias);
-    }
 
-    public static function tearDownAfterClass()
-    {
-        parent::tearDownAfterClass();
+        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
+        unset($this->Noticias, $this->Noticias);
         TableRegistry::clear();
     }
-
 
     public function testDeteccaoAutomatica()
     {
         $this->Noticias->addBehavior("CakePtbr.AjusteData");
         $noticia = $this->__preparaNoticia();
 
+        $this->assertEquals("datetime", $this->Noticias->schema()->columnType("publicado_em"));
         $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
         $this->assertEquals("2015-03-25 16:42:05", $noticia->get("publicado_em"));
-
-        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
     }
 
 
     /**
      * testCampoEmArray
      *
-     * @retun void
+     * @retun  void
      * @access public
      */
     public function testCampoEmArray()
@@ -88,14 +79,33 @@ class AjusteDataBehaviorTest extends TestCase
         $noticia = $this->__preparaNoticia();
 
         $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
+    }
 
-        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
+    /**
+     * @return \Cake\Datasource\EntityInterface|mixed
+     */
+    private function __preparaNoticia()
+    {
+        $noticia = $this->Noticias->newEntity(
+            [
+            'titulo' => 'Exemplo 1',
+            'conteudo' => 'Exemplo exemplo',
+            'autor_id' => 2,
+            'publicado_em' => '2011-04-21 16:42:05',
+            'autorizado_em' => '2011-04-21',
+            ]
+        );
+        $noticia->set("autorizado_em", "22/03/2015");
+        $noticia->set("publicado_em", "25/03/2015 16:42:05");
+        $this->Noticias->save($noticia);
+        $this->assertEmpty($noticia->errors());
+        return $noticia;
     }
 
     /**
      * testCamposEmArray
      *
-     * @retun void
+     * @retun  void
      * @access public
      */
     public function testCamposEmArray()
@@ -105,22 +115,6 @@ class AjusteDataBehaviorTest extends TestCase
 
         $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
         $this->assertEquals("2015-03-25 16:42:05", $noticia->get("publicado_em"));
-
-        $this->Noticias->removeBehavior("CakePtbr.AjusteData");
-    }
-
-    /**
-     * @return \Cake\Datasource\EntityInterface|mixed
-     */
-    private function __preparaNoticia()
-    {
-        $noticia = $this->Noticias->get(1);
-        $noticia->set("id", null);
-        $noticia->isNew(true);
-        $noticia->set("autorizado_em", "22/03/2015");
-        $noticia->set("publicado_em", "25/03/2015 16:42:05");
-        $this->Noticias->save($noticia);
-        return $noticia;
     }
 
 

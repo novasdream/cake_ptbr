@@ -6,8 +6,8 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @author        Juan Basso <jrbasso@gmail.com>
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @author     Juan Basso <jrbasso@gmail.com>
+ * @license    http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 namespace CakePtbr\Model\Behavior;
 
@@ -26,7 +26,7 @@ class AjusteDataBehavior extends Behavior
     /**
      * Configuração dos campos
      *
-     * @var array
+     * @var    array
      * @access public
      */
     public $campos;
@@ -47,42 +47,49 @@ class AjusteDataBehavior extends Behavior
     }
 
     /**
-     * @param Event $event A instância de evento
+     * Muda o valor dos campos configurados para o padrão SQL
+     * @param Event  $event  A instância de evento
      * @param Entity $entity A entidade a ser salva
-     * @param \ArrayObject $options Opções do evento
-     * @return bool
+     * @return void
      */
-    public function beforeSave(Event $event, Entity $entity, \ArrayObject $options )
+    public function beforeSave(Event $event, Entity &$entity)
     {
-        return $this->ajustarDatas($entity);
+        $this->__ajustarDatas($entity);
     }
 
     /**
-     * Corrigir as datas
+     * Corrigir os campos de data ou timestamp
      * @param Entity $entity Uma instância
-     * @return bool
+     * @return void
      */
-    public function ajustarDatas(Entity $entity)
+    private function __ajustarDatas(Entity &$entity)
     {
-        $data =& $entity->toArray();
         foreach ($this->campos[$this->_table->alias()] as $campo) {
-            if (isset($data[$campo])) {
+            if ($entity->has($campo) && $entity->get($campo) !== "") {
                 // DATA E HORA
-                if (preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4} \d{1,2}\:\d{1,2}/', $data[$campo])) {
-                    $this->__ajustarDataHora($entity, $data, $campo);
-                } elseif (preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4}/', $data[$campo])) { // DATA
-                    $this->__ajustarData($entity, $data, $campo);
+                if ($this->__isDataHora($entity->get($campo))) {
+                    $this->__ajustarDataHora($entity, $campo);
+                } elseif (preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4}/', $entity->get($campo))) { // DATA
+                    $this->__ajustarData($entity, $campo);
                 }
             }
         }
-        return true;
+    }
+
+    /**
+     * Verifica se string é uma representação de timestamp
+     * @param string $valor A string a ser checada
+     * @return int
+     */
+    private function __isDataHora($valor)
+    {
+        return preg_match('/\d{1,2}\/\d{1,2}\/\d{2,4} \d{1,2}\:\d{1,2}/', $valor);
     }
 
     /**
      * Buscar campos de data nos dados da model
      *
      * @return array Lista dos campos
-     * @access protected
      */
     private function __buscaCamposDate()
     {
@@ -92,7 +99,10 @@ class AjusteDataBehavior extends Behavior
         }
         $saida = [];
         foreach ($colunas as $campo) {
-            if ($this->_table->schema()->columnType($campo) === 'date' && !in_array($campo, array('created', 'updated', 'modified'))) {
+            if ($this->_table->schema()->columnType($campo) === 'date'
+                || $this->_table->schema()->columnType($campo) === 'datetime'
+                && !in_array($campo, ['created', 'updated', 'modified'])
+            ) {
                 $saida[] = $campo;
             }
         }
@@ -102,12 +112,12 @@ class AjusteDataBehavior extends Behavior
     /**
      * Ajusta o valor do campo do tipo data de uma entidade.
      * @param Entity $entity Instância de entidade
-     * @param string $campo Nome do campo a ser atualizado
-     * @return array
+     * @param string $campo  Nome do campo a ser atualizado
+     * @return void
      */
-    private function __ajustarDataHora(Entity $entity, $campo)
+    private function __ajustarDataHora(Entity &$entity, $campo)
     {
-        if ( is_array($campo) ) {
+        if (is_array($campo)) {
             $campo = implode('', $campo);
         }
         $novaData = $this->__separarDataHora($entity->get($campo));
@@ -121,31 +131,24 @@ class AjusteDataBehavior extends Behavior
             }
         }
         $entity->set($campo, "$ano-$mes-$dia $hora:$minuto:$segundo");
-        return array($dia, $mes, $ano);
     }
 
     /**
      * Ajusta o valor do campo do tipo data de uma entidade.
      * @param Entity $entity Instância de entidade
-     * @param string $campo Nome do campo a ser atualizado
-     * @return array
+     * @param string $campo  Nome do campo a ser atualizado
+     * @return void
      */
-    private function __ajustarData(Entity $entity, $campo)
+    private function __ajustarData(Entity &$entity, $campo)
     {
-        if ( is_array($campo) ) {
+        if (is_array($campo)) {
             $campo = implode('', $campo);
         }
         list($dia, $mes, $ano) = explode('/', $entity->get($campo));
         if (strlen($ano) == 2) {
-            if ($ano > 50) {
-                $ano += 1900;
-                return array($dia, $mes, $ano);
-            } else {
-                $ano += 2000;
-                return array($dia, $mes, $ano);
-            }
+            $ano = $ano > 50 ? $ano + 1900 : $ano + 2000;
         }
-        $entity->set("$ano-$mes-$dia");
+        $entity->set($campo, "$ano-$mes-$dia");
     }
 
     /**
