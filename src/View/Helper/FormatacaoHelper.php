@@ -200,11 +200,12 @@ class FormatacaoHelper extends Helper
             'zero' => 'R$0,00',
             'places' => 2,
             'negative' => '-',
+            'locale' => 'pt_BR',
             'pattern' => '#.###,00',
-            'escape' => true
+            'escape' => true,
         ];
         $config = array_merge($padrao, $opcoes);
-        return $this->Number->currency($valor, null, $config);
+        return $this->Number->currency($valor, 'BRL', $config);
     }
 
     /**
