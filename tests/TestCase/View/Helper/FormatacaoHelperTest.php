@@ -121,13 +121,13 @@ class FormatacaoHelperTeste extends TestCase
      */
     public function testPrecisao()
     {
-        $this->assertEquals($this->Formatacao->precisao(-10), '-10,000');
-        $this->assertEquals($this->Formatacao->precisao(0), '0,000');
-        $this->assertEquals($this->Formatacao->precisao(10), '10,000');
-        $this->assertEquals($this->Formatacao->precisao(10.323), '10,323');
-        $this->assertEquals($this->Formatacao->precisao(10.56486), '10,565');
-        $this->assertEquals($this->Formatacao->precisao(10.56486, 2), '10,56');
-        $this->assertEquals($this->Formatacao->precisao(10.56486, 0), '11');
+        $this->assertEquals('-10,000', $this->Formatacao->precisao(-10));
+        $this->assertEquals('0,000', $this->Formatacao->precisao(0));
+        $this->assertEquals('10,000', $this->Formatacao->precisao(10));
+        $this->assertEquals('10,323', $this->Formatacao->precisao(10.323));
+        $this->assertEquals('10,565', $this->Formatacao->precisao(10.56486));
+        $this->assertEquals('10,56', $this->Formatacao->precisao(10.56486, 2));
+        $this->assertEquals('11', $this->Formatacao->precisao(10.56486, 0));
     }
 
     /**
@@ -138,12 +138,12 @@ class FormatacaoHelperTeste extends TestCase
      */
     public function testPorcentagem()
     {
-        $this->assertEquals($this->Formatacao->porcentagem(-10), '-10,00%');
-        $this->assertEquals($this->Formatacao->porcentagem(0), '0,00%');
-        $this->assertEquals($this->Formatacao->porcentagem(10), '10,00%');
-        $this->assertEquals($this->Formatacao->porcentagem(10, 1), '10,0%');
-        $this->assertEquals($this->Formatacao->porcentagem(10.123), '10,12%');
-        $this->assertEquals($this->Formatacao->porcentagem(10, 0), '10%');
+        $this->assertEquals('-10,00%', $this->Formatacao->porcentagem(-10));
+        $this->assertEquals('0,00%', $this->Formatacao->porcentagem(0));
+        $this->assertEquals('10,00%', $this->Formatacao->porcentagem(10));
+        $this->assertEquals('10,0%', $this->Formatacao->porcentagem(10, 1));
+        $this->assertEquals('10,12%', $this->Formatacao->porcentagem(10.123));
+        $this->assertEquals('10%', $this->Formatacao->porcentagem(10, 0));
     }
 
     /**
@@ -154,14 +154,14 @@ class FormatacaoHelperTeste extends TestCase
      */
     public function testMoeda()
     {
-        $this->assertEquals($this->Formatacao->moeda(-10), '-R$10,00');
-        $this->assertEquals($this->Formatacao->moeda(-10.12), '-R$10,12');
-        $this->assertEquals($this->Formatacao->moeda(-0.12), '-R$0,12');
-        $this->assertEquals($this->Formatacao->moeda(0), 'R$0,00');
-        $this->assertEquals($this->Formatacao->moeda(0.5), 'R$0,50');
-        $this->assertEquals($this->Formatacao->moeda(0.52), 'R$0,52');
-        $this->assertEquals($this->Formatacao->moeda(10), 'R$10,00');
-        $this->assertEquals($this->Formatacao->moeda(10.12), 'R$10,12');
+        $this->assertEquals('-R$10,00', $this->Formatacao->moeda(-10),);
+        $this->assertEquals('-R$10,12', $this->Formatacao->moeda(-10.12));
+        $this->assertEquals('-R$0,12', $this->Formatacao->moeda(-0.12));
+        $this->assertEquals('R$0,00', $this->Formatacao->moeda(0));
+        $this->assertEquals('R$0,50', $this->Formatacao->moeda(0.5));
+        $this->assertEquals('R$0,52', $this->Formatacao->moeda(0.52));
+        $this->assertEquals('R$10,00', $this->Formatacao->moeda(10));
+        $this->assertEquals('R$10,12', $this->Formatacao->moeda(10.12));
     }
 
     /**
@@ -172,22 +172,22 @@ class FormatacaoHelperTeste extends TestCase
      */
     public function testMoedaPorExtenso()
     {
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(0), 'zero');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(0.52), 'cinquenta e dois centavos');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(1), 'um real');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(1.2), 'um real e vinte centavos');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(10), 'dez reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(15), 'quinze reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(25), 'vinte e cinco reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(40), 'quarenta reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(100), 'cem reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(105), 'cento e cinco reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(120), 'cento e vinte reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(210), 'duzentos e dez reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(322), 'trezentos e vinte e dois reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(1234), 'um mil duzentos e trinta e quatro reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(100000), 'cem mil reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(1000000), 'um milhão de reais');
-        $this->assertEquals($this->Formatacao->moedaPorExtenso(1045763), 'um milhão, quarenta e cinco mil setecentos e sessenta e três reais');
+        $this->assertEquals('zero', $this->Formatacao->moedaPorExtenso(0));
+        $this->assertEquals('cinquenta e dois centavos', $this->Formatacao->moedaPorExtenso(0.52));
+        $this->assertEquals('um real', $this->Formatacao->moedaPorExtenso(1));
+        $this->assertEquals('um real e vinte centavos', $this->Formatacao->moedaPorExtenso(1.2));
+        $this->assertEquals('dez reais', $this->Formatacao->moedaPorExtenso(10));
+        $this->assertEquals('quinze reais', $this->Formatacao->moedaPorExtenso(15));
+        $this->assertEquals('vinte e cinco reais', $this->Formatacao->moedaPorExtenso(25));
+        $this->assertEquals('quarenta reais', $this->Formatacao->moedaPorExtenso(40));
+        $this->assertEquals('cem reais', $this->Formatacao->moedaPorExtenso(100));
+        $this->assertEquals('cento e cinco reais', $this->Formatacao->moedaPorExtenso(105));
+        $this->assertEquals('cento e vinte reais', $this->Formatacao->moedaPorExtenso(120));
+        $this->assertEquals('duzentos e dez reais', $this->Formatacao->moedaPorExtenso(210));
+        $this->assertEquals('trezentos e vinte e dois reais', $this->Formatacao->moedaPorExtenso(322));
+        $this->assertEquals('um mil duzentos e trinta e quatro reais', $this->Formatacao->moedaPorExtenso(1234));
+        $this->assertEquals('cem mil reais', $this->Formatacao->moedaPorExtenso(100000));
+        $this->assertEquals('um milhão de reais', $this->Formatacao->moedaPorExtenso(1000000));
+        $this->assertEquals('um milhão, quarenta e cinco mil setecentos e sessenta e três reais', $this->Formatacao->moedaPorExtenso(1045763));
     }
 }

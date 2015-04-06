@@ -209,19 +209,6 @@ class FormatacaoHelper extends Helper
             'escape' => true
         ];
         $config = array_merge($padrao, $opcoes);
-//        if ($valor > -1 && $valor < 1) {
-//            $before = $config['before'];
-//            $config['before'] = '';
-//            $formatado = $this->Number->format(abs($valor), $config);
-//            if ($valor < 0) {
-//                if ($config['negative'] == '()') {
-//                    return '(' . $before . $formatado . ')';
-//                } else {
-//                    return $before . $config['negative'] . $formatado;
-//                }
-//            }
-//            return $before . $formatado;
-//        }
         return $this->Number->currency($valor, null, $config);
     }
 
