@@ -169,6 +169,5 @@ class AjusteDataBehavior extends Behavior
         } elseif (strpos($valor, " ")) {
             return explode(" ", $valor);
         }
-        return [];
     }
 }

@@ -81,26 +81,6 @@ class AjusteDataBehaviorTest extends TestCase
         $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
     }
 
-    /**
-     * @return \Cake\Datasource\EntityInterface|mixed
-     */
-    private function __preparaNoticia()
-    {
-        $noticia = $this->Noticias->newEntity(
-            [
-            'titulo' => 'Exemplo 1',
-            'conteudo' => 'Exemplo exemplo',
-            'autor_id' => 2,
-            'publicado_em' => '2011-04-21 16:42:05',
-            'autorizado_em' => '2011-04-21',
-            ]
-        );
-        $noticia->set("autorizado_em", "22/03/2015");
-        $noticia->set("publicado_em", "25/03/2015 16:42:05");
-        $this->Noticias->save($noticia);
-        $this->assertEmpty($noticia->errors());
-        return $noticia;
-    }
 
     /**
      * testCamposEmArray
@@ -111,11 +91,34 @@ class AjusteDataBehaviorTest extends TestCase
     public function testCamposEmArray()
     {
         $this->Noticias->addBehavior("CakePtbr.AjusteData", ["autorizado_em", "publicado_em"]);
-        $noticia = $this->__preparaNoticia();
+        $noticia = $this->__preparaNoticia("25/03/15 16:42:05");
 
         $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
         $this->assertEquals("2015-03-25 16:42:05", $noticia->get("publicado_em"));
     }
 
 
+    /**
+     *
+     * @param bool $publicadoEm Valor para colocar no publicado_em
+     * @param bool $autorizadoEm Valor para colocar no autorizado_em
+     * @return \Cake\Datasource\EntityInterface|mixed
+     */
+    private function __preparaNoticia($publicadoEm = false, $autorizadoEm = false)
+    {
+        $noticia = $this->Noticias->newEntity(
+            [
+            'titulo' => 'Exemplo 1',
+            'conteudo' => 'Exemplo exemplo',
+            'autor_id' => 2,
+            'publicado_em' => '2011-04-21 16:42:05',
+            'autorizado_em' => '2011-04-21',
+            ]
+        );
+        $noticia->set("autorizado_em", $autorizadoEm ?: "22/03/2015");
+        $noticia->set("publicado_em", $publicadoEm ?: "25/03/2015 16:42:05");
+        $this->Noticias->save($noticia);
+        $this->assertEmpty($noticia->errors());
+        return $noticia;
+    }
 }
