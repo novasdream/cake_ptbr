@@ -11,11 +11,14 @@
  */
 namespace CakePtbr\View\Helper;
 
+use Cake\I18n\Time;
 use Cake\View\Helper;
 
 /**
  * Formatação Helper
  *
+ * @property Helper\TimeHelper $Time
+ * @property Helper\NumberHelper $Number
  * @link http://wiki.github.com/jrbasso/cake_ptbr/helper-formatao
  */
 class FormatacaoHelper extends Helper
@@ -37,7 +40,7 @@ class FormatacaoHelper extends Helper
      * @return string Data no formato dd/mm/aaaa
      * @access public
      */
-    public function data($data = null, $opcoes = array())
+    public function data($data = null, $opcoes = [])
     {
         $padrao = [
             'invalid' => '31/12/1969',
@@ -45,27 +48,10 @@ class FormatacaoHelper extends Helper
         ];
         $config = array_merge($padrao, $opcoes);
 
-        $data = $this->_ajustaDataHora($data);
-        return $this->Time->format('d/m/Y', $data, $config['invalid'], $config['userOffset']);
+        $data = $this->_ajustaDataHora($data) ? $this->_ajustaDataHora($data) : $data;
+        return $this->Time->format($data, 'dd/MM/YYYY', $config['invalid'], $config['userOffset']);
     }
 
-    /**
-     * Se a data for nula, usa data atual
-     *
-     * @param mixed $data A data a ser ajustada
-     * @return integer Se null, retorna a data/hora atual
-     * @access protected
-     */
-    protected function _ajustaDataHora($data)
-    {
-        if (is_null($data)) {
-            return time();
-        }
-        if (is_integer($data) || ctype_digit($data)) {
-            return (int)$data;
-        }
-        return strtotime((string)$data);
-    }
 
     /**
      * Mostrar a data completa
@@ -79,11 +65,14 @@ class FormatacaoHelper extends Helper
         $_diasDaSemana = array('Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado');
         $_meses = array('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro');
 
-        $dataHora = $this->_ajustaDataHora($dataHora);
-        $w = date('w', $dataHora);
-        $n = date('n', $dataHora) - 1;
 
-        return sprintf('%s, %02d de %s de %04d, %s', $_diasDaSemana[$w], date('d', $dataHora), $_meses[$n], date('Y', $dataHora), date('H:i:s', $dataHora));
+        /**
+         * @var Time $dataHora
+         */
+        $dataHora = $this->_ajustaDataHora($dataHora);
+        $dataHora = is_object($dataHora) ? $dataHora : Time::createFromTimestamp($dataHora);
+
+        return sprintf('%s, %02d de %s de %04d, %s', $_diasDaSemana[$dataHora->dayOfWeek], $dataHora->day, $_meses[$dataHora->month-1], $dataHora->year, $dataHora->formatLocalized("%T"));
     }
 
     /**
@@ -169,9 +158,9 @@ class FormatacaoHelper extends Helper
 
         $dataHora = $this->_ajustaDataHora($dataHora);
         if ($segundos) {
-            return $this->Time->format('d/m/Y H:i:s', $dataHora, $config['invalid'], $config['userOffset']);
+            return $this->Time->format($dataHora, 'dd/MM/YYYY HH:mm:ss', $config['invalid'], $config['userOffset']);
         }
-        return $this->Time->format('d/m/Y H:i', $dataHora, $config['invalid'], $config['userOffset']);
+        return $this->Time->format($dataHora, 'dd/MM/YYYY HH:mm', $config['invalid'], $config['userOffset']);
     }
 
     /**
@@ -208,32 +197,31 @@ class FormatacaoHelper extends Helper
      * @return string Valor formatado em reais
      * @access public
      */
-    public function moeda($valor, $opcoes = array())
+    public function moeda($valor, $opcoes = [])
     {
-        $padrao = array(
-            'before' => 'R$ ',
+        $padrao = [
             'after' => '',
-            'zero' => 'R$ 0,00',
+            'zero' => 'R$0,00',
             'places' => 2,
-            'thousands' => '.',
-            'decimals' => ',',
+            'pattern' => '#.###,00',
             'negative' => '()',
+            'locale' => 'pt_BR',
             'escape' => true
-        );
+        ];
         $config = array_merge($padrao, $opcoes);
-        if ($valor > -1 && $valor < 1) {
-            $before = $config['before'];
-            $config['before'] = '';
-            $formatado = $this->Number->format(abs($valor), $config);
-            if ($valor < 0) {
-                if ($config['negative'] == '()') {
-                    return '(' . $before . $formatado . ')';
-                } else {
-                    return $before . $config['negative'] . $formatado;
-                }
-            }
-            return $before . $formatado;
-        }
+//        if ($valor > -1 && $valor < 1) {
+//            $before = $config['before'];
+//            $config['before'] = '';
+//            $formatado = $this->Number->format(abs($valor), $config);
+//            if ($valor < 0) {
+//                if ($config['negative'] == '()') {
+//                    return '(' . $before . $formatado . ')';
+//                } else {
+//                    return $before . $config['negative'] . $formatado;
+//                }
+//            }
+//            return $before . $formatado;
+//        }
         return $this->Number->currency($valor, null, $config);
     }
 
@@ -337,5 +325,27 @@ class FormatacaoHelper extends Helper
             return 'zero';
         }
         return trim(str_replace('  ', ' ', $rt));
+    }
+
+
+    /**
+     * Se a data for nula, usa data atual
+     *
+     * @param mixed $data A data a ser ajustada
+     * @return integer Se null, retorna a data/hora atual
+     * @access protected
+     */
+    protected function _ajustaDataHora($data)
+    {
+        if (is_null($data)) {
+            return Time::now();
+        }
+        if (is_integer($data) || ctype_digit($data)) {
+            return Time::createFromTimestamp($data);
+        }
+
+        $tsLong = strtotime((string)$data);
+
+        return $tsLong ? $tsLong : $data;
     }
 }
