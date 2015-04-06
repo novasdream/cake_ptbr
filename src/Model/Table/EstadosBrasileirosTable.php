@@ -21,13 +21,13 @@ use Cake\ORM\Table;
  *
  * @link http://wiki.github.com/jrbasso/cake_ptbr/model-estadobrasileiro
  */
-class EstadoBrasileiroTable extends Table
+class EstadosBrasileirosTable extends Table
 {
 
     public function initialize()
     {
-        $this->table();
-        $this->schema();
+        $this->connection(null);
+        $this->table(null);
         $this->_estados = Estados::lista();
     }
 
