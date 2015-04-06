@@ -27,22 +27,13 @@ matrix:
     - php: 5.4
       env: COVERALLS=1 DEFAULT=0
 
-before_install:
-  - sudo apt-get update && sudo apt-get --reinstall install -qq language-pack-pt
-  - sudo locale-gen en_US en_US.UTF-8 pt_BR.UTF-8 pt_BR
-  - sudo dpkg-reconfigure locales
-  - export LC_ALL=pt_BR.UTF-8
-  - export LANG=pt_BR.UTF-8
-  - export LC_MONETARY=pt_BR.UTF-8
-
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction
 
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
 
-  - sh -c "if [ '$PHPCS' = '1' ]; then pear channel-discover pear.cakephp.org; fi"
-  - sh -c "if [ '$PHPCS' = '1' ]; then pear install --alldeps cakephp/CakePHP_CodeSniffer; fi"
+  - sh -c "if [ '$PHPCS' = '1' ]; then vendor/bin/phpcs --config-set installed_paths /path/to/your/app/vendor/cakephp/cakephp-codesniffer ; fi"
 
   - sh -c "if [ '$COVERALLS' = '1' ]; then composer require --dev satooshi/php-coveralls:dev-master; fi"
   - sh -c "if [ '$COVERALLS' = '1' ]; then mkdir -p build/logs; fi"
@@ -55,7 +46,7 @@ script:
   - sh -c "if [ '$COVERALLS' = '1' ]; then phpunit --coverage-clover build/logs/clover.xml; fi"
   - sh -c "if [ '$COVERALLS' = '1' ]; then php vendor/bin/coveralls -c .coveralls.yml -v; fi"
   - sh -c "if [ '$DEFAULT' = '1' ]; then phpunit; fi"
-  - sh -c "if [ '$PHPCS' = '1' ]; then phpcs -p --extensions=php --standard=CakePHP --ignore=vendor --ignore=src/Model/Behavior/CorreiosTrait.php --ignore=Test --ignore=docs . ; fi"
+  - sh -c "if [ '$PHPCS' = '1' ]; then vendor/bin/phpcs -p --extensions=php --standard=CakePHP --ignore=vendor --ignore=src/Model/Behavior/CorreiosTrait.php --ignore=Test --ignore=docs . ; fi"
 
 notifications:
   email: false
