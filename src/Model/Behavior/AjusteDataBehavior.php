@@ -124,11 +124,7 @@ class AjusteDataBehavior extends Behavior
         list($dia, $mes, $ano) = explode('/', $novaData[0]);
         list($hora, $minuto, $segundo) = explode(':', $novaData[1]);
         if (strlen($ano) == 2) {
-            if ($ano > 50) {
-                $ano += 1900;
-            } else {
-                $ano += 2000;
-            }
+            $ano = $ano > 50 ? $ano + 1900 : $ano + 2000;
         }
         $entity->set($campo, "$ano-$mes-$dia $hora:$minuto:$segundo");
     }

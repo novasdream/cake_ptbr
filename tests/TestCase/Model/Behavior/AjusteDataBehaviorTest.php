@@ -76,7 +76,7 @@ class AjusteDataBehaviorTest extends TestCase
     public function testCampoEmArray()
     {
         $this->Noticias->addBehavior("CakePtbr.AjusteData", ["autorizado_em"]);
-        $noticia = $this->__preparaNoticia();
+        $noticia = $this->__preparaNoticia(false, "22/03/15");
 
         $this->assertEquals("2015-03-22", $noticia->get("autorizado_em"));
     }
