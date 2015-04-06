@@ -204,7 +204,6 @@ class FormatacaoHelper extends Helper
             'zero' => 'R$0,00',
             'places' => 2,
             'pattern' => '#.###,00',
-            'negative' => '()',
             'locale' => 'pt_BR',
             'escape' => true
         ];
