@@ -154,7 +154,7 @@ class FormatacaoHelperTeste extends TestCase
      */
     public function testMoeda()
     {
-        $this->assertEquals('-R$10,00', $this->Formatacao->moeda(-10),);
+        $this->assertEquals('-R$10,00', $this->Formatacao->moeda(-10));
         $this->assertEquals('-R$10,12', $this->Formatacao->moeda(-10.12));
         $this->assertEquals('-R$0,12', $this->Formatacao->moeda(-0.12));
         $this->assertEquals('R$0,00', $this->Formatacao->moeda(0));
