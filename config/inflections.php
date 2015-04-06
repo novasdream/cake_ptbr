@@ -13,7 +13,6 @@
 
 use Cake\Utility\Inflector;
 
-
 // Alteração do inflector
 
 Inflector::rules('singular', [

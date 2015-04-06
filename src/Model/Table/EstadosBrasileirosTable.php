@@ -11,10 +11,8 @@
  */
 namespace CakePtbr\Model\Table;
 
-
 use CakePtbr\Lib\Estados;
 use Cake\ORM\Table;
-
 
 /**
  * EstadoBrasileiro
@@ -24,6 +22,10 @@ use Cake\ORM\Table;
 class EstadosBrasileirosTable extends Table
 {
 
+    /**
+     * @inheritdoc
+     * @return void
+     */
     public function initialize()
     {
         $this->connection(null);
@@ -41,8 +43,8 @@ class EstadosBrasileirosTable extends Table
 
     /**
      * Find
-     * @param string $type
-     * @param array $options
+     * @param string $type Tipo do find, pode ser all ou list
+     * @param array $options Opções, não utilize este paramêtro
      * @return array|bool
      */
     public function find($type = 'all', $options = [])
@@ -61,7 +63,7 @@ class EstadosBrasileirosTable extends Table
     /**
      * Lista dos estados na forma do list
      *
-     * @param boolean $incluirDF Incluir Distrito Federal na lista?
+     * @param bool $incluirDF Incluir Distrito Federal na lista?
      * @return array Lista dos estados
      * @access public
      */
@@ -78,7 +80,7 @@ class EstadosBrasileirosTable extends Table
     /**
      * Lista dos estados na forma do find
      *
-     * @param boolean $incluirDF Incluir Distrito Federal na lista?
+     * @param bool $incluirDF Incluir Distrito Federal na lista?
      * @return array Lista dos estados
      * @access public
      */
@@ -115,9 +117,8 @@ class EstadosBrasileirosTable extends Table
     /**
      * Sigla do estado conforme o nome
      *
-     * @param string $estado
+     * @param string $estado Nome extenso do estado
      * @return string Sigla do estado. False quando estado for inválido
-     * @access public
      */
     public function siglaPorEstado($estado)
     {
@@ -152,7 +153,7 @@ class EstadosBrasileirosTable extends Table
     /**
      * Lista dos estados do centro oeste
      *
-     * @param boolean $incluirDF Incluir Distrito Federal?
+     * @param bool $incluirDF Incluir Distrito Federal?
      * @return array Lista dos estados do centro oeste
      * @access public
      */
@@ -201,5 +202,4 @@ class EstadosBrasileirosTable extends Table
         }
         return $retorno;
     }
-
 }

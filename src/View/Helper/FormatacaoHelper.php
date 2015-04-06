@@ -65,14 +65,10 @@ class FormatacaoHelper extends Helper
         $_diasDaSemana = array('Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado');
         $_meses = array('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro');
 
-
-        /**
-         * @var Time $dataHora
-         */
         $dataHora = $this->_ajustaDataHora($dataHora);
         $dataHora = is_object($dataHora) ? $dataHora : Time::createFromTimestamp($dataHora);
 
-        return sprintf('%s, %02d de %s de %04d, %s', $_diasDaSemana[$dataHora->dayOfWeek], $dataHora->day, $_meses[$dataHora->month-1], $dataHora->year, $dataHora->formatLocalized("%T"));
+        return sprintf('%s, %02d de %s de %04d, %s', $_diasDaSemana[$dataHora->dayOfWeek], $dataHora->day, $_meses[$dataHora->month - 1], $dataHora->year, $dataHora->formatLocalized("%T"));
     }
 
     /**

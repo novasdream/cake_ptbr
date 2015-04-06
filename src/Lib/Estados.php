@@ -11,7 +11,6 @@
  */
 namespace CakePtbr\Lib;
 
-
 /**
  * Estados
  *
@@ -57,5 +56,4 @@ class Estados
             'TO' => 'Tocantins'
         ];
     }
-
 }

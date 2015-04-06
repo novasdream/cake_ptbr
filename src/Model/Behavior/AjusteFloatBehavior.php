@@ -18,7 +18,6 @@ use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
 
-
 /**
  * AjusteFloatBehavior
  *
@@ -38,11 +37,9 @@ class AjusteFloatBehavior extends Behavior
     private $__floatFields = [];
 
     /**
-     * Bootstraping the behavior
-     *
-     * @param array $config
+     * @inheritdoc
+     * @param array $config Configurações do behavior
      * @return void
-     * @access public
      */
     public function initialize(array $config = [])
     {
@@ -59,8 +56,8 @@ class AjusteFloatBehavior extends Behavior
      * Transforma o valor de BRL para o formato SQL antes de  salvar a entidade
      * no banco de dados
      *
-     * @param Event $event
-     * @param Entity $entity
+     * @param Event $event Instância do evento
+     * @param Entity $entity Instância da entidade a ser salva pelo ORM
      * @return bool
      * @access public
      */
@@ -68,8 +65,8 @@ class AjusteFloatBehavior extends Behavior
     {
         foreach ($this->_table->schema()->columns() as $campo) {
             $valor = $entity->get($campo);
-            if ( !empty($valor) && $this->_table->schema()->columnType($campo) === "float") {
-                if ( !is_string($valor) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $valor)) {
+            if (!empty($valor) && $this->_table->schema()->columnType($campo) === "float") {
+                if (!is_string($valor) || preg_match('/^[0-9]+(\.[0-9]+)?$/', $valor)) {
                     continue;
                 }
                 $entity->set($campo, str_replace(['.', ','], ['', '.'], $valor));
@@ -84,22 +81,24 @@ class AjusteFloatBehavior extends Behavior
      * Transforma o valor de BRL para o formato SQL antes de executar uma query
      * com conditions.
      *
-     * @param Event $event
-     * @param Query $query
-     * @param array $options
-     * @param $primary
-     * @return array
+     * @param Event $event Evento reportado
+     * @param Query $query Consulta a ser feita
+     * @param array $options Opções da consulta
+     * @return void
      * @access public
      */
-    public function beforeFind(Event $event, Query $query, $options = [], $primary)
+    public function beforeFind(Event $event, Query $query, $options = [])
     {
         $query->clause("where")->traverse([$this, "traverseClause"]);
     }
 
-    public function traverseClause($comparison) {
-        /**
-         * @var Comparison $comparison
-         */
+    /**
+     * Método a ser usado como callable no beforeFind.
+     * @param Comparison $comparison O objeto de comparação da query
+     * @return void
+     */
+    public function traverseClause($comparison)
+    {
         if (isset($comparison)) {
             if ($this->_table->schema()->columnType($comparison->getField()) === "float") {
                 if (is_string($comparison->getValue()) && !preg_match('/^[0-9]+(\.[0-9]+)?$/', $comparison->getValue())) {
@@ -108,5 +107,4 @@ class AjusteFloatBehavior extends Behavior
             }
         }
     }
-
 }

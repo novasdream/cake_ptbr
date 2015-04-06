@@ -72,7 +72,7 @@ trait CorreiosTrait
     public function valorFrete($opcoes = [])
     {
         // Validação dos parâmetros
-        if ( $this->__erroCorreios($this->__validaOpcoes($opcoes)) ) {
+        if ($this->__erroCorreios($this->__validaOpcoes($opcoes))) {
             return $this->__validaOpcoes($opcoes);
         }
 
@@ -231,7 +231,7 @@ trait CorreiosTrait
      */
     protected function _validaCep($cep, $api = '')
     {
-        if ( $api === 'postmon' ) {
+        if ($api === 'postmon') {
             if (preg_match('/^\d{8}$/', $cep)) {
                 $cep = substr_replace($cep, "-", 5, 0);
             }
@@ -241,7 +241,7 @@ trait CorreiosTrait
             }
         }
         Log::debug("## " . $cep);
-        return (bool) (preg_match('/^\d{5}\-?\d{3}$/', $cep) || preg_match('/^\d{8}$/', $cep));
+        return (bool)(preg_match('/^\d{5}\-?\d{3}$/', $cep) || preg_match('/^\d{8}$/', $cep));
     }
 
     /**
@@ -270,5 +270,4 @@ trait CorreiosTrait
 
         return trim($response->body());
     }
-
 }
