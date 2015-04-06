@@ -1,5 +1,7 @@
 language: php
 
+sudo: required
+
 php:
   - 5.4
   - 5.5
@@ -25,9 +27,17 @@ matrix:
     - php: 5.4
       env: COVERALLS=1 DEFAULT=0
 
+before_install:
+  - sudo apt-get update && sudo apt-get --reinstall install -qq language-pack-pt
+  - sudo locale-gen en_US en_US.UTF-8 pt_BR.UTF-8 pt_BR
+  - sudo dpkg-reconfigure locales
+  - export LC_ALL=pt_BR.UTF-8
+  - export LANG=pt_BR.UTF-8
+  - export LC_MONETARY=pt_BR.UTF-8
+
 before_script:
   - composer self-update
-  - composer install --prefer-source --no-interaction --dev
+  - composer install --prefer-source --no-interaction
 
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
 

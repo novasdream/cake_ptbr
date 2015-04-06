@@ -12,15 +12,10 @@
 namespace CakePtbr\Test\TestCase\View\Helper;
 
 use Cake\I18n\I18n;
-use Cake\I18n\Time;
 use Cake\View\Helper;
-use Cake\View\Helper\NumberHelper;
-use Cake\View\Helper\TimeHelper;
 use CakePtbr\View\Helper\FormatacaoHelper;
-use Cake\Controller\Controller;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
-use Carbon\Carbon;
 
 
 /**
@@ -51,6 +46,8 @@ class FormatacaoHelperTeste extends TestCase
         date_default_timezone_set('America/Sao_Paulo');
         I18n::locale('pt_BR');
         setlocale(LC_TIME, ['pt_BR.uft8', 'pt_BR', 'Português', 'Portuguese', 'pt_BR.UTF-8']);
+        setlocale(LC_MONETARY, ['pt_BR.uft8', 'pt_BR', 'Português', 'Portuguese', 'pt_BR.UTF-8']);
+        setlocale(LC_ALL, ['pt_BR.uft8', 'pt_BR', 'Português', 'Portuguese', 'pt_BR.UTF-8']);
     }
 
     /**
@@ -147,24 +144,6 @@ class FormatacaoHelperTeste extends TestCase
     }
 
     /**
-     * testMoeda
-     *
-     * @retun void
-     * @access public
-     */
-    public function testMoeda()
-    {
-        $this->assertEquals('-R$10,00', $this->Formatacao->moeda(-10));
-        $this->assertEquals('-R$10,12', $this->Formatacao->moeda(-10.12));
-        $this->assertEquals('-R$0,12', $this->Formatacao->moeda(-0.12));
-        $this->assertEquals('R$0,00', $this->Formatacao->moeda(0));
-        $this->assertEquals('R$0,50', $this->Formatacao->moeda(0.5));
-        $this->assertEquals('R$0,52', $this->Formatacao->moeda(0.52));
-        $this->assertEquals('R$10,00', $this->Formatacao->moeda(10));
-        $this->assertEquals('R$10,12', $this->Formatacao->moeda(10.12));
-    }
-
-    /**
      * testMoedaPorExtenso
      *
      * @retun void
@@ -189,5 +168,23 @@ class FormatacaoHelperTeste extends TestCase
         $this->assertEquals('cem mil reais', $this->Formatacao->moedaPorExtenso(100000));
         $this->assertEquals('um milhão de reais', $this->Formatacao->moedaPorExtenso(1000000));
         $this->assertEquals('um milhão, quarenta e cinco mil setecentos e sessenta e três reais', $this->Formatacao->moedaPorExtenso(1045763));
+    }
+
+    /**
+     * testMoeda
+     *
+     * @retun void
+     * @access public
+     */
+    public function testMoeda()
+    {
+        $this->assertEquals('-R$10,00', $this->Formatacao->moeda(-10));
+        $this->assertEquals('-R$10,12', $this->Formatacao->moeda(-10.12));
+        $this->assertEquals('-R$0,12', $this->Formatacao->moeda(-0.12));
+        $this->assertEquals('R$0,00', $this->Formatacao->moeda(0));
+        $this->assertEquals('R$0,50', $this->Formatacao->moeda(0.5));
+        $this->assertEquals('R$0,52', $this->Formatacao->moeda(0.52));
+        $this->assertEquals('R$10,00', $this->Formatacao->moeda(10));
+        $this->assertEquals('R$10,12', $this->Formatacao->moeda(10.12));
     }
 }

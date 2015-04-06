@@ -203,8 +203,8 @@ class FormatacaoHelper extends Helper
             'after' => '',
             'zero' => 'R$0,00',
             'places' => 2,
+            'negative' => '-',
             'pattern' => '#.###,00',
-            'locale' => 'pt_BR',
             'escape' => true
         ];
         $config = array_merge($padrao, $opcoes);
