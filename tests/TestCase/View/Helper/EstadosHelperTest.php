@@ -83,6 +83,12 @@ class EstadosHelperTest extends TestCase
             $this->assertArrayHasKey($option->getAttribute("value"), $this->listaEstados);
             $this->assertEquals($option->getAttribute("value"), trim($option->textContent));
         }
+
+        $crawler = new Crawler($this->__removeAcentos($this->Estados->select('Model.uf', 'BA', array('uf' => true))));
+        $this->assertEquals(27, $crawler->filter("select[name='Model[uf]'] > option")->count());
+        $this->assertEquals(1, $crawler->filter("select > option[selected='selected']")->count());
+        $this->assertEquals("BA", $crawler->filter("select > option[selected='selected']")->getNode(0)->textContent);
+
     }
 
     private function __removeAcentos($string) {
