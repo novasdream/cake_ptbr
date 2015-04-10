@@ -1,7 +1,7 @@
 # CakePHP em português
 
-[![Build Status](https://travis-ci.org/pedro-stanaka/cake_ptbr.svg?branch=3.0)](https://travis-ci.org/pedro-stanaka/cake_ptbr)
-[![Coverage Status](https://coveralls.io/repos/pedro-stanaka/cake_ptbr/badge.svg?branch=3.0)](https://coveralls.io/r/pedro-stanaka/cake_ptbr?branch=3.0)
+[![Build Status](https://travis-ci.org/jrbasso/cake_ptbr.svg?branch=master)](https://travis-ci.org/jrbasso/cake_ptbr)
+[![Coverage Status](https://coveralls.io/repos/jrbasso/cake_ptbr/badge.svg?branch=master)](https://coveralls.io/r/jrbasso/cake_ptbr?branch=master)
 
 Caso você tenha dúvidas, elogios, reclamações, sugestões, etc., acesse o
 "Grupo de discursão CakePHP-PT":http://groups.google.com/group/cakephp-pt e envie uma mensagem.
