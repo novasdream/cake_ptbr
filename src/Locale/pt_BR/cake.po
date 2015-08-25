@@ -76,7 +76,7 @@ msgstr "on %s"
 
 #: I18n/Time.php:287
 msgid "just now"
-msgstr "poucos instantes atrás."
+msgstr "agora"
 
 #: I18n/Time.php:403
 msgid "about a second ago"
